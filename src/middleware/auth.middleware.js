@@ -1,30 +1,32 @@
-module.exports = (userService) => {
-  return async (req, res, next) => {
-    const { originalUrl } = req;
+const userService = require("../services/user.service");
 
-    /**
-     * Move static check to database
-     */
-    if (originalUrl === "/v1/login" || originalUrl === "/v1/register") {
-      next();
-      return;
-    }
+async function auth(req, res, next) {
+  const { originalUrl } = req;
 
-    const authorization = req.headers.authorization;
+  /**
+   * Move static check to database
+   */
+  if (originalUrl === "/v1/login" || originalUrl === "/v1/register") {
+    next();
+    return;
+  }
 
-    if (authorization == null) {
-      next(Error("User has not access"));
-      return;
-    }
+  const authorization = req.headers.authorization;
 
-    const [bearer, token] = authorization.split(" ");
-    const user = await userService.getUserByToken(token);
+  if (authorization == null) {
+    next(Error("User has not access"));
+    return;
+  }
 
-    if (user) {
-      req.user = {
-        id: user.id,
-      };
-      next();
-    } else next(Error("User has not access"));
-  };
-};
+  const [bearer, token] = authorization.split(" ");
+  const user = await userService.getUserByToken(token);
+
+  if (user) {
+    req.user = {
+      id: user.id,
+    };
+    next();
+  } else next(Error("User has not access"));
+}
+
+module.exports = auth;
