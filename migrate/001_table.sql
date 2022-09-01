@@ -13,9 +13,9 @@ CREATE TABLE IF NOT EXISTS public.users
     password     VARCHAR(255) NOT NULL,
     access_token TEXT,
 
-    CONSTRAINT pk_users PRIMARY KEY (id)
-    CONSTRAINT uq_login UNIQUE (login)
-    CONSTRAINT uq_password UNIQUE (password)
+    CONSTRAINT pk_users PRIMARY KEY (id),
+    CONSTRAINT uq_login UNIQUE (login),
+    CONSTRAINT uq_password UNIQUE (password),
     CONSTRAINT uq_access_token UNIQUE (access_token)
 );
 
