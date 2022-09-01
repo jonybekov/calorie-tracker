@@ -16,7 +16,6 @@ async function login(req, res) {
 
 async function register(req, res, next) {
   const { firstName, lastName, avatar = null, login, password } = req.body;
-  console.log(login, password);
 
   try {
     const newUser = await userService.registerUser(

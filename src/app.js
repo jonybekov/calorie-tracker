@@ -9,13 +9,15 @@ const port = process.env.PORT || 3000;
 
 const authMiddleware = require("./middleware/auth.middleware");
 const authRouter = require("./routes/auth.route");
+const foodsRouter = require("./routes/foods.route");
 
 // Express init
 app.use(express.json());
-// app.use(authMiddleware);
 app.use(express.urlencoded({ extended: true }));
 
+app.use(authMiddleware);
 app.use("/v1", authRouter);
+app.use("/v1/foods", foodsRouter);
 
 app.get("/", (req, res) => {
   res.json({ message: "ok" });
