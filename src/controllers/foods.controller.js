@@ -1,11 +1,14 @@
 const foodsService = require("../services/foods.service");
+const userService = require("../services/user.service");
 
 async function create(req, res, next) {
-  const { userId, name, caloriesValue, consumedAt, price } = req.body;
+  const { name, caloriesValue, consumedAt, price } = req.body;
+  const [_, token] = req.headers.authorization.split(" ");
+  const user = await userService.getUserByToken(token);
 
   try {
     const newFood = await foodsService.createFood({
-      userId,
+      userId: user.id,
       name,
       price,
       caloriesValue,

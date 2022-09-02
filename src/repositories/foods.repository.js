@@ -31,6 +31,18 @@ const INSERT_FOOD = `
   RETURNING *;
 `;
 
+const QUERY_CALORIES_SUM_BY_DATE = `
+  SELECT SUM(calorie_value) FROM foods
+  WHERE user_id = $1
+  AND consumed_at = $2
+`;
+
+const QUERY_USER_SPENDINGS_FOR_ONE_MONTH = `
+  SELECT SUM(price) FROM foods
+  WHERE consumed_at > $1 - INTERVAL '1 month'
+  AND consumed_at <= $1
+`;
+
 const DELETE_FOOD = `
   DELETE FROM foods
   WHERE id = $1
@@ -57,14 +69,14 @@ async function findFoodByUserId(userId) {
 
 async function saveFood({
   name,
-  calorieValue,
+  caloriesValue,
   consumedAt = new Date().toISOString(),
   price,
   userId,
 }) {
   const result = await db.queryParams(INSERT_FOOD, [
     name,
-    calorieValue,
+    caloriesValue,
     consumedAt,
     price,
     userId,
@@ -78,14 +90,32 @@ async function deleteFood(id) {
 }
 
 async function updateFood(id, data) {
-  const { name, calorieValue, consumedAt, price } = data;
+  const { name, caloriesValue, consumedAt, price } = data;
 
   const result = await db.queryParams(UPDATE_FOOD_BY_ID, [
     id,
     name,
-    calorieValue,
+    caloriesValue,
     consumedAt,
     price,
+  ]);
+
+  return result.rows[0];
+}
+
+async function getUserTotalCaloriesByDate(userId, date) {
+  const result = await db.queryParams(QUERY_CALORIES_SUM_BY_DATE, [
+    userId,
+    date,
+  ]);
+
+  return result.rows[0];
+}
+
+async function getUserTotalSpendingsForOneMonth(userId, endDate) {
+  const result = await db.queryParams(QUERY_USER_SPENDINGS_FOR_ONE_MONTH, [
+    userId,
+    endDate,
   ]);
 
   return result.rows[0];
@@ -98,4 +128,6 @@ module.exports = {
   saveFood,
   updateFood,
   deleteFood,
+  getUserTotalCaloriesByDate,
+  getUserTotalSpendingsForOneMonth,
 };

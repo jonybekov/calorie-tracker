@@ -9,6 +9,8 @@ CREATE TABLE IF NOT EXISTS public.users
     first_name   VARCHAR(40)  NOT NULL,
     last_name    VARCHAR(40),
     avatar       TEXT,
+    monthly_budget_limit    BIGINT DEFAULT 1000,
+    daily_calorie_limit     BIGINT DEFAULT 2100,
     login        VARCHAR(120) NOT NULL,
     password     VARCHAR(255) NOT NULL,
     access_token TEXT,
@@ -33,7 +35,6 @@ CREATE TABLE IF NOT EXISTS public.foods
 
     CONSTRAINT pk_foods PRIMARY KEY (id),
     CONSTRAINT fk_user_food_relationship FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-
 );
 
 CREATE TABLE IF NOT EXISTS public.role_relationship
@@ -46,6 +47,6 @@ CREATE TABLE IF NOT EXISTS public.role_relationship
     role        roles     NOT NULL DEFAULT 'USER',
 
     CONSTRAINT pk_role_relationship PRIMARY KEY (id),
-    CONSTRAINT fk_user_role_relationship FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    CONSTRAINT fk_user_role_relationship FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     CONSTRAINT uq_user_id_role UNIQUE (user_id, role)
 )

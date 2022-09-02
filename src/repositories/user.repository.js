@@ -10,6 +10,11 @@ const QUERY_USER_BY_LOGIN = `
     WHERE login = $1
 `;
 
+const QUERY_USER_BY_ID = `
+    SELECT * FROM users
+    WHERE id = $1
+`;
+
 const UPDATE_USER_TOKEN_BY_ID = `
     UPDATE users
     SET access_token = $2
@@ -30,6 +35,11 @@ async function findUserByToken(token) {
 
 async function findUserByLogin(login) {
   const result = await db.queryParams(QUERY_USER_BY_LOGIN, [login]);
+  return result.rows[0];
+}
+
+async function findUserById(id) {
+  const result = await db.queryParams(QUERY_USER_BY_ID, [id]);
   return result.rows[0];
 }
 
@@ -58,6 +68,7 @@ async function saveUser(
 }
 
 module.exports = {
+  findUserById,
   findUserByLogin,
   findUserByToken,
   updateUserTokenById,
