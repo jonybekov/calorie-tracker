@@ -6,3 +6,7 @@ export interface IUser {
   monthly_budget_limit?: number;
   daily_calorie_limit?: number;
 }
+
+export interface ILimitCheck {
+  is_exceeded: boolean;
+}

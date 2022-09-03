@@ -1,42 +1,70 @@
-import { DeleteIcon, EditIcon, PlusSquareIcon } from "@chakra-ui/icons";
+import { PlusSquareIcon } from "@chakra-ui/icons";
 import {
-  Avatar,
+  Alert,
+  AlertIcon,
   Box,
   Button,
   Center,
   CircularProgress,
-  Container,
   Divider,
   Flex,
   Heading,
-  IconButton,
-  Input,
   List,
-  ListItem,
   ScaleFade,
   Spacer,
-  Text,
   useBoolean,
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createFood, getFoods, queryClient } from "../shared/api";
-import { IFood, IFoodForm } from "../shared/types/food";
+import {
+  checkCalorieLimit,
+  createFood,
+  getFoods,
+  queryClient,
+} from "../shared/api";
+import { IFoodForm } from "../shared/types/food";
 import { FoodEntry } from "./food-entry";
 import { FoodEntryForm } from "./food-entry-form";
 
+import { DateRangePicker, FocusedInputShape } from "react-dates";
+import { useState } from "react";
+import { Moment } from "moment";
+import { AxiosError } from "axios";
+import { ErrorCode, IErrorResponse } from "../shared/types";
+import { isAuthenticated } from "../shared/helpers";
+import { useGlobalContext } from "../app/contexts/global.context";
+
 export function FoodEntries() {
-  const { isLoading, data, isError } = useQuery(["foods"], getFoods);
+  const { user } = useGlobalContext();
+  const { isLoading, data } = useQuery(["foods"], getFoods, {
+    retry(_, error: AxiosError<IErrorResponse>) {
+      if (error.response?.status === ErrorCode.Unauthorized) {
+        return false;
+      }
+      return true;
+    },
+  });
+  const { data: calorieLimit } = useQuery(
+    ["check_daily_calorie"],
+    checkCalorieLimit
+  );
+
   const [isAddOpen, setIsAddOpen] = useBoolean();
   const toast = useToast();
+  const [startDate, setStartDate] = useState<Moment | null>(null);
+  const [endDate, setEndDate] = useState<Moment | null>(null);
+  const [focusedInput, setFocusedInput] = useState<FocusedInputShape | null>(
+    null
+  );
 
   const mutation = useMutation(createFood, {
     onSuccess: () => {
       queryClient.invalidateQueries(["foods"]);
+      queryClient.invalidateQueries(["check_daily_calorie"]);
     },
-    onError(error, variables, context) {
+    onError(error: AxiosError<IErrorResponse>) {
       toast({
-        title: "Error occured",
+        title: error.response?.data.message,
         status: "error",
       });
     },
@@ -48,9 +76,35 @@ export function FoodEntries() {
 
   return (
     <>
-      <Heading fontSize="2xl" mb="2" color="gray.700">
-        Foods
-      </Heading>
+      <Flex align="center" mb="2">
+        <Heading fontSize="2xl" color="gray.700">
+          Foods
+        </Heading>
+        <Spacer />
+        <Box>
+          <DateRangePicker
+            startDate={startDate}
+            startDateId="start"
+            endDateId="end"
+            endDate={endDate}
+            onDatesChange={({ startDate, endDate }) => {
+              setStartDate(startDate);
+              setEndDate(endDate);
+            }}
+            focusedInput={focusedInput}
+            onFocusChange={setFocusedInput}
+          />
+        </Box>
+      </Flex>
+      {calorieLimit?.is_exceeded && (
+        <Alert borderRadius="lg" status="warning" mb="2">
+          <AlertIcon />
+          You reached your daily calorie limit of {
+            user?.daily_calorie_limit
+          }{" "}
+          kcal
+        </Alert>
+      )}
       <Divider />
 
       <List my="5" spacing={2}>

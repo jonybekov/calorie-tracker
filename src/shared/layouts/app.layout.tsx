@@ -1,6 +1,19 @@
-import { Container } from "@chakra-ui/react";
+import { Center, CircularProgress, Container, Fade } from "@chakra-ui/react";
 import React from "react";
+import { useGlobalContext } from "../../app/contexts/global.context";
 
 export function AppLayout({ children }: React.PropsWithChildren) {
-  return <Container maxW="container.sm">{children}</Container>;
+  const { isLoading } = useGlobalContext();
+
+  return (
+    <Container maxW="container.sm">
+      {isLoading ? (
+        <Center py="10" height="100vh">
+          <CircularProgress thickness="4px" isIndeterminate />
+        </Center>
+      ) : (
+        <Fade in={!isLoading}>{children}</Fade>
+      )}
+    </Container>
+  );
 }

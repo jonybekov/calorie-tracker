@@ -35,6 +35,7 @@ export function FoodEntry({ data }: IProps) {
   const deleteMutation = useMutation(deleteFood, {
     onSuccess: () => {
       queryClient.invalidateQueries(["foods"]);
+      queryClient.invalidateQueries(["check_daily_calorie"]);
     },
     onError(error, variables, context) {
       toast({
@@ -47,6 +48,7 @@ export function FoodEntry({ data }: IProps) {
   const updateMutation = useMutation(updateFood, {
     onSuccess: () => {
       queryClient.invalidateQueries(["foods"]);
+      queryClient.invalidateQueries(["check_daily_calorie"]);
     },
     onError(error, variables, context) {
       toast({

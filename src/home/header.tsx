@@ -1,39 +1,69 @@
 import {
+  Alert,
   Avatar,
   Box,
+  Button,
+  Text,
+  CloseButton,
   Flex,
   Heading,
   Modal,
   ModalContent,
   ModalOverlay,
   useDisclosure,
-  ModalBody,
-  ModalHeader,
-  Button,
-  ModalFooter,
-  ModalCloseButton,
+  VStack,
+  Spacer,
 } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import { useGlobalContext } from "../app/contexts/global.context";
+import { isAuthenticated } from "../shared/helpers";
 import { UserSettingsForm } from "./user-settings-form";
 
 export const Header = () => {
-  const { user } = useGlobalContext();
+  const { user, isLoading } = useGlobalContext();
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   return (
-    <Flex align="center" justify="space-between" mb="10">
-      <Box>
-        <Heading color="gray.400">Hello,</Heading>
-        <Heading>{user?.first_name}</Heading>
-      </Box>
-      <Avatar onClick={onOpen} size="lg" />
-      <Modal isOpen={isOpen} isCentered onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalCloseButton />
-          <UserSettingsForm />
-        </ModalContent>
-      </Modal>
-    </Flex>
+    <VStack mb="10" align="flex-start" spacing={4}>
+      <Flex align="center" justify="space-between" width="full">
+        <Box pt="4">
+          <Heading color="gray.400">Hello,</Heading>
+          <Heading>{user?.first_name || "Anonymous"}</Heading>
+        </Box>
+
+        {!user && !isLoading ? (
+          <Link to="/login">
+            <Button>Sign In</Button>
+          </Link>
+        ) : (
+          <Avatar
+            transition="ease-in-out"
+            _hover={{ boxShadow: "avatar" }}
+            onClick={onOpen}
+            cursor="pointer"
+            src={user?.avatar}
+            size="lg"
+          />
+        )}
+
+        <Modal isOpen={isOpen} isCentered onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <UserSettingsForm onClose={onClose} />
+          </ModalContent>
+        </Modal>
+      </Flex>
+      {!isAuthenticated() && (
+        <Alert borderRadius="lg" fontWeight="medium" mb="4">
+          <Text>Please sign in to save changes</Text>
+          <Spacer />
+          <CloseButton
+            alignSelf="flex-start"
+            position="relative"
+            onClick={onClose}
+          />
+        </Alert>
+      )}
+    </VStack>
   );
 };

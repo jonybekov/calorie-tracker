@@ -1,7 +1,13 @@
+import "react-dates/initialize";
+
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HomePage } from "./home/home-page";
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import {
+  ChakraProvider,
+  extendTheme,
+  theme as baseTheme,
+} from "@chakra-ui/react";
 import { Global } from "@emotion/react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./shared/api";
@@ -9,6 +15,8 @@ import { GlobalContextProvider } from "./app/contexts/global.context";
 import { LoginPage } from "./auth/login-page";
 import { RegisterPage } from "./auth/register-page";
 import { AppLayout } from "./shared/layouts";
+
+import "react-dates/lib/css/_datepicker.css";
 
 const Fonts = () => {
   return (
@@ -24,6 +32,16 @@ const theme = extendTheme({
   fonts: {
     heading: `Inter, sans-serif`,
     body: `Inter, sans-serif`,
+  },
+  shadows: {
+    avatar: `0 0 0 4px ${baseTheme.colors.gray[300]}`,
+  },
+  components: {
+    FormLabel: {
+      baseStyle: {
+        color: "gray.500",
+      },
+    },
   },
 });
 
