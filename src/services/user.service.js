@@ -14,14 +14,16 @@ async function getUserById(id) {
   return userRepository.findUserById(id);
 }
 
-async function checkCalorieLimit(userId, consumedAt) {
-  const totalCalories = await foodsRepository.getUserTotalCaloriesByDate(
-    userId,
-    consumedAt
-  );
-  const user = await usersService.getUserById(userId);
+async function updateUserByToken(token, data) {
+  return userRepository.updateUserByToken(token, data);
+}
 
-  if (totalCalories > user.daily_calorie_limit) {
+async function checkCalorieLimit(userId, consumedAt) {
+  const { sum: totalCalories } =
+    await foodsRepository.getUserTotalCaloriesByDate(userId, consumedAt);
+  const user = await getUserById(userId);
+
+  if (parseInt(totalCalories) > parseInt(user.daily_calorie_limit)) {
     return { is_exceeded: true };
   }
 
@@ -46,7 +48,7 @@ async function checkAuth(login, password) {
   const user = await userRepository.findUserByLogin(login);
 
   if (!user) {
-    throw Error(`User not found by ${login}`);
+    throw Error(`User is not found`);
   }
 
   const match = await bcrypt.compare(password, user.password);
@@ -83,6 +85,7 @@ async function registerUser(firstName, lastName, avatar, login, password) {
 module.exports = {
   getUserById,
   getUserByToken,
+  updateUserByToken,
   checkCalorieLimit,
   checkAuth,
   registerUser,

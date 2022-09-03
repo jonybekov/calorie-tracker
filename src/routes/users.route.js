@@ -9,7 +9,10 @@ const usersController = require("../controllers/users.controller");
 /* GET auth user */
 router.get("/me", usersController.getAuthUser);
 
-router.post("/me/check-calories", usersController.checkCalorieLimit);
+/* POST auth user */
+router.post("/me", usersController.updateAuthUser);
+
+router.get("/me/check/daily-calories", usersController.checkCalorieLimit);
 
 // router.post("/me/check/montly-budget", usersController.deleteOne);
 

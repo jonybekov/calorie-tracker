@@ -9,16 +9,43 @@ async function getAuthUser(req, res, next) {
   res.json(user);
 }
 
+async function updateAuthUser(req, res, next) {
+  const [_, token] = req.headers.authorization.split(" ");
+  const {
+    first_name,
+    last_name,
+    avatar,
+    monthly_budget_limit,
+    daily_calorie_limit,
+  } = req.body;
+
+  try {
+    const updatedUser = await userService.updateUserByToken(token, {
+      first_name,
+      last_name,
+      avatar,
+      monthly_budget_limit,
+      daily_calorie_limit,
+    });
+    delete updatedUser.access_token;
+    delete updatedUser.password;
+    res.json(updatedUser);
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function checkCalorieLimit(req, res, next) {
   const { consumedAt } = req;
   const [_, token] = req.headers.authorization.split(" ");
   const user = await userService.getUserByToken(token);
-  const result = foodsService.checkCalorieLimit(user.id, consumedAt);
+  const result = await userService.checkCalorieLimit(user.id, consumedAt);
 
   res.json(result);
 }
 
 module.exports = {
   getAuthUser,
+  updateAuthUser,
   checkCalorieLimit,
 };

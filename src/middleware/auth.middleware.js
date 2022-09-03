@@ -14,7 +14,10 @@ async function auth(req, res, next) {
   const authorization = req.headers.authorization;
 
   if (authorization == null) {
-    next(Error("User has not access"));
+    res.status(401).send({
+      message: "Unauthorized",
+      code: 401,
+    });
     return;
   }
 
@@ -26,7 +29,11 @@ async function auth(req, res, next) {
       id: user.id,
     };
     next();
-  } else next(Error("User has not access"));
+  } else
+    res.status(401).send({
+      message: "Unauthorized",
+      code: 401,
+    });
 }
 
 module.exports = auth;

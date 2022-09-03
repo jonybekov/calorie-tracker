@@ -34,7 +34,6 @@ const INSERT_FOOD = `
 const QUERY_CALORIES_SUM_BY_DATE = `
   SELECT SUM(calorie_value) FROM foods
   WHERE user_id = $1
-  AND consumed_at = $2
 `;
 
 const QUERY_USER_SPENDINGS_FOR_ONE_MONTH = `
@@ -103,11 +102,11 @@ async function updateFood(id, data) {
   return result.rows[0];
 }
 
-async function getUserTotalCaloriesByDate(userId, date) {
-  const result = await db.queryParams(QUERY_CALORIES_SUM_BY_DATE, [
-    userId,
-    date,
-  ]);
+async function getUserTotalCaloriesByDate(
+  userId,
+  date = new Date().toISOString()
+) {
+  const result = await db.queryParams(QUERY_CALORIES_SUM_BY_DATE, [userId]);
 
   return result.rows[0];
 }

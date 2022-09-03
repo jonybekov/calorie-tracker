@@ -22,6 +22,17 @@ const UPDATE_USER_TOKEN_BY_ID = `
     RETURNING *;
 `;
 
+const UPDATE_USER_BY_TOKEN = `
+    UPDATE users
+    SET first_name = $2,
+    last_name = $3,
+    avatar = $4,
+    monthly_budget_limit = $5,
+    daily_calorie_limit = $6
+    WHERE access_token = $1
+    RETURNING *;
+`;
+
 const INSERT_USER = `
     INSERT INTO users(first_name, last_name, avatar, login, password, access_token)
     VALUES ($1, $2, $3, $4, $5, $6)
@@ -48,6 +59,21 @@ async function updateUserTokenById(userId, token) {
   return result.rows[0];
 }
 
+async function updateUserByToken(
+  token,
+  { first_name, last_name, avatar, monthly_budget_limit, daily_calorie_limit }
+) {
+  const result = await db.queryParams(UPDATE_USER_BY_TOKEN, [
+    token,
+    first_name,
+    last_name,
+    avatar,
+    monthly_budget_limit,
+    daily_calorie_limit,
+  ]);
+  return result.rows[0];
+}
+
 async function saveUser(
   firstName,
   lastName,
@@ -71,6 +97,7 @@ module.exports = {
   findUserById,
   findUserByLogin,
   findUserByToken,
+  updateUserByToken,
   updateUserTokenById,
   saveUser,
 };
