@@ -3,4 +3,5 @@ WORKDIR /app
 COPY ./package.json ./
 RUN npm i --save --legacy-peer-deps
 COPY . .
+EXPOSE 8080
 CMD ["npm", "run", "dev"]

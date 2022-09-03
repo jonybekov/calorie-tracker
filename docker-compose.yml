@@ -1,10 +1,17 @@
 version: "3"
 services:
   postgres:
-    image: "postgres:latest"
+    container_name: postgres
+    restart: always
+    build: db/
     environment:
-      - POSTGRES_PASSWORD=pRmRWafFm8
+      POSTGRES_DB: calorie
+      POSTGRES_USER: azizbek
+      POSTGRES_PASSWORD: 12345
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
   nginx:
+    container_name: nginx
     depends_on:
       - api
       - client
@@ -15,6 +22,7 @@ services:
     ports:
       - "3050:80"
   api:
+    container_name: api
     build:
       dockerfile: Dockerfile.dev
       context: "./server"
@@ -22,12 +30,15 @@ services:
       - /app/node_modules
       - ./server:/app
     environment:
-      - DB_HOST = localhost
-      - DB_USER = postgres
-      - DB_NAME = calorie-app
-      - DB_PASSWORD = pRmRWafFm8
-      - DB_PORT = 5432
+      DB_HOST: postgres
+      DB_USER: azizbek
+      DB_NAME: calorie
+      DB_PASSWORD: 12345
+      DB_PORT: 5432
+    depends_on:
+      - postgres
   client:
+    container_name: client
     stdin_open: true
     build:
       dockerfile: Dockerfile.dev

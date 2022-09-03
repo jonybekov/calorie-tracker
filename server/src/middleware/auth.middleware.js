@@ -6,7 +6,11 @@ async function auth(req, res, next) {
   /**
    * Move static check to database
    */
-  if (originalUrl === "/v1/login" || originalUrl === "/v1/register") {
+  if (
+    originalUrl === "/" ||
+    originalUrl === "/v1/login" ||
+    originalUrl === "/v1/register"
+  ) {
     next();
     return;
   }
