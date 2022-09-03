@@ -1,8 +1,17 @@
-import { ID, IFood, IFoodForm, IList } from "../types";
+import { QueryFunctionContext } from "@tanstack/react-query";
+import { ID, IFood, IFoodForm, IGetFoodParams, IList } from "../types";
 import { request } from "./api-instance";
 
-export async function getFoods(): Promise<IList<IFood>> {
-  return (await request.get("/foods")).data;
+export async function getFoods({
+  queryKey,
+}: QueryFunctionContext): Promise<IList<IFood>> {
+  const [_key, params] = queryKey;
+
+  return (
+    await request.get("/foods", {
+      params,
+    })
+  ).data;
 }
 
 export function getFood(id: string) {

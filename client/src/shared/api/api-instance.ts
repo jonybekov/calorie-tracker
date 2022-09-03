@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const request = axios.create({
-  baseURL: "http://localhost:3050/api/v1/",
+  baseURL: import.meta.env.VITE_BASE_URL,
 });
 
 const getAccessToken = () => {

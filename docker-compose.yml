@@ -8,19 +8,20 @@ services:
       POSTGRES_DB: calorie
       POSTGRES_USER: azizbek
       POSTGRES_PASSWORD: 12345
-    volumes:
-      - ./db/data:/var/lib/postgresql/data
-  nginx:
-    container_name: nginx
-    depends_on:
-      - api
-      - client
-    restart: always
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./nginx
-    ports:
-      - "3050:80"
+      TZ: Asia/Tashkent
+    # volumes:
+    #   - ./db/data:/var/lib/postgresql/data
+  # nginx:
+  #   container_name: nginx
+  #   depends_on:
+  #     - api
+  #     - client
+  #   restart: always
+  #   build:
+  #     dockerfile: Dockerfile.dev
+  #     context: ./nginx
+  #   ports:
+  #     - "3050:80"
   api:
     container_name: api
     build:
@@ -37,6 +38,8 @@ services:
       DB_PORT: 5432
     depends_on:
       - postgres
+    ports:
+      - 3000:3000
   client:
     container_name: client
     stdin_open: true
@@ -46,3 +49,5 @@ services:
     volumes:
       - /app/node_modules
       - ./client:/app
+    ports:
+      - 8080:8080

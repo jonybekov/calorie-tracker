@@ -1,5 +1,7 @@
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
+const dayjs = require("dayjs");
+const { DATE_FORMAT } = require("../utils/consts");
 
 const userRepository = require("../repositories/user.repository");
 const foodsRepository = require("../repositories/foods.repository");
@@ -18,7 +20,10 @@ async function updateUserByToken(token, data) {
   return userRepository.updateUserByToken(token, data);
 }
 
-async function checkCalorieLimit(userId, consumedAt) {
+async function checkCalorieLimit(
+  userId,
+  consumedAt = dayjs(DATE_FORMAT).format()
+) {
   const { sum: totalCalories } =
     await foodsRepository.getUserTotalCaloriesByDate(userId, consumedAt);
   const user = await getUserById(userId);

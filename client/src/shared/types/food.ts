@@ -7,6 +7,13 @@ export interface IFood {
   consumed_at?: string;
 }
 
+export interface IGetFoodParams {
+  startDate?: string;
+  endDate?: string;
+  page?: number;
+  size?: number;
+}
+
 export interface IFoodForm {
   name: string;
   caloriesValue: number;

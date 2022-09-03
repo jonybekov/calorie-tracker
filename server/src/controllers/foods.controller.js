@@ -46,7 +46,15 @@ async function update(req, res, next) {
 }
 
 async function getAll(req, res) {
-  const foods = await foodsService.getAllFoods();
+  const { startDate, endDate, page, size } = req.query;
+
+  const foods = await foodsService.getAllFoods({
+    startDate,
+    endDate,
+    page,
+    size,
+  });
+
   res.json(foods);
 }
 

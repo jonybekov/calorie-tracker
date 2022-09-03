@@ -7,17 +7,14 @@ pool.on("error", (err, client) => {
   process.exit(-1);
 });
 
-(async function () {
-  const client = await pool.connect();
-  const response = await client.query("SELECT NOW()");
-
-  console.log("XDATA", response.rows[0]);
-  client.release();
-})();
-
 module.exports = {
   async query(query) {
-    return pool.query(query);
+    try {
+      return pool.query(query);
+    } catch (err) {
+      // TODO: Return custom error for db
+      return err;
+    }
   },
 
   async queryParams(query, params) {

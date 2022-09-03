@@ -2,7 +2,10 @@ const db = require("../services/db.service");
 
 const QUERY_FOODS = `
   SELECT * FROM foods
+  WHERE consumed_at BETWEEN $1 and $2
   ORDER BY created_at DESC
+  LIMIT $3
+  OFFSET (($4 - 1) * $3);
 `;
 
 const QUERY_FOOD_BY_ID = `
@@ -20,6 +23,7 @@ const UPDATE_FOOD_BY_ID = `
   SET name = $2,
   calorie_value = $3,
   consumed_at = $4,
+  modified_at = NOW(),
   price = $5
   WHERE id = $1
   RETURNING *;
@@ -48,8 +52,13 @@ const DELETE_FOOD = `
   RETURNING *;
 `;
 
-async function findAllFoods() {
-  const { rows, rowCount } = await db.query(QUERY_FOODS);
+async function findAllFoods({ startDate, endDate, size, page }) {
+  const { rows, rowCount } = await db.queryParams(QUERY_FOODS, [
+    startDate,
+    endDate,
+    size,
+    page,
+  ]);
   return {
     data: rows,
     count: rowCount,
@@ -66,13 +75,7 @@ async function findFoodByUserId(userId) {
   return result.rows[0];
 }
 
-async function saveFood({
-  name,
-  caloriesValue,
-  consumedAt = new Date().toISOString(),
-  price,
-  userId,
-}) {
+async function saveFood({ name, caloriesValue, consumedAt, price, userId }) {
   const result = await db.queryParams(INSERT_FOOD, [
     name,
     caloriesValue,
@@ -102,10 +105,7 @@ async function updateFood(id, data) {
   return result.rows[0];
 }
 
-async function getUserTotalCaloriesByDate(
-  userId,
-  date = new Date().toISOString()
-) {
+async function getUserTotalCaloriesByDate(userId, date) {
   const result = await db.queryParams(QUERY_CALORIES_SUM_BY_DATE, [userId]);
 
   return result.rows[0];

@@ -33,28 +33,36 @@ import { AxiosError } from "axios";
 import { ErrorCode, IErrorResponse } from "../shared/types";
 import { isAuthenticated } from "../shared/helpers";
 import { useGlobalContext } from "../app/contexts/global.context";
+import moment from "moment";
 
 export function FoodEntries() {
   const { user } = useGlobalContext();
-  const { isLoading, data } = useQuery(["foods"], getFoods, {
-    retry(_, error: AxiosError<IErrorResponse>) {
-      if (error.response?.status === ErrorCode.Unauthorized) {
-        return false;
-      }
-      return true;
-    },
-  });
-  const { data: calorieLimit } = useQuery(
-    ["check_daily_calorie"],
-    checkCalorieLimit
-  );
-
   const [isAddOpen, setIsAddOpen] = useBoolean();
   const toast = useToast();
   const [startDate, setStartDate] = useState<Moment | null>(null);
   const [endDate, setEndDate] = useState<Moment | null>(null);
   const [focusedInput, setFocusedInput] = useState<FocusedInputShape | null>(
     null
+  );
+
+  const retry = (_: unknown, error: AxiosError<IErrorResponse>) => {
+    if (error.response?.status === ErrorCode.Unauthorized) {
+      return false;
+    }
+    return true;
+  };
+
+  const { isLoading, data } = useQuery(
+    ["foods", { startDate, endDate }],
+    getFoods,
+    {
+      retry,
+      enabled: true,
+    }
+  );
+  const { data: calorieLimit } = useQuery(
+    ["check_daily_calorie"],
+    checkCalorieLimit
   );
 
   const mutation = useMutation(createFood, {
@@ -88,8 +96,8 @@ export function FoodEntries() {
             endDateId="end"
             endDate={endDate}
             onDatesChange={({ startDate, endDate }) => {
-              setStartDate(startDate);
-              setEndDate(endDate);
+              setStartDate(moment(startDate).utc().startOf("day"));
+              setEndDate(moment(endDate).utc().endOf("day"));
             }}
             focusedInput={focusedInput}
             onFocusChange={setFocusedInput}
