@@ -1,5 +1,7 @@
+import { ID } from "./common";
+
 export interface IUser {
-  id: string;
+  id: ID;
   first_name: string;
   last_name?: string;
   avatar?: string;
@@ -7,6 +9,10 @@ export interface IUser {
   daily_calorie_limit?: number;
 }
 
-export interface ILimitCheck {
+export type DailyCaloriesResult = {
+  id: ID;
+  first_name: string;
+  consumed_at: string;
+  daily_calories: string;
   is_exceeded: boolean;
-}
+};

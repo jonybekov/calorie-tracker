@@ -5,6 +5,7 @@ const { DATE_FORMAT } = require("../utils/consts");
 
 const userRepository = require("../repositories/user.repository");
 const foodsRepository = require("../repositories/foods.repository");
+const { isNone } = require("../utils/helpers");
 
 const SALT = 10;
 
@@ -20,19 +21,16 @@ async function updateUserByToken(token, data) {
   return userRepository.updateUserByToken(token, data);
 }
 
-async function checkCalorieLimit(
-  userId,
-  consumedAt = dayjs(DATE_FORMAT).format()
-) {
-  const { sum: totalCalories } =
-    await foodsRepository.getUserTotalCaloriesByDate(userId, consumedAt);
-  const user = await getUserById(userId);
+async function checkCalorieLimit({ userId, startDate, endDate }) {
+  const DEFAULT_START_DATE = dayjs().startOf("D").toISOString();
+  const DEFAULT_END_DATE = dayjs().endOf("D").toISOString();
 
-  if (parseInt(totalCalories) > parseInt(user.daily_calorie_limit)) {
-    return { is_exceeded: true };
-  }
-
-  return { is_exceeded: false };
+  const result = await foodsRepository.getUserTotalCaloriesByDate({
+    userId,
+    startDate: !isNone(startDate) ? startDate : DEFAULT_START_DATE,
+    endDate: !isNone(endDate) ? endDate : DEFAULT_END_DATE,
+  });
+  return result;
 }
 
 async function checkBudgetLimit(userId, endDate) {

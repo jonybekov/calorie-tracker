@@ -11,7 +11,8 @@ const port = process.env.PORT || 3000;
 const authMiddleware = require("./middleware/auth.middleware");
 const authRouter = require("./routes/auth.route");
 const foodsRouter = require("./routes/foods.route");
-const usersRouter = require("./routes/users.route");
+const userRouter = require("./routes/users.route");
+const adminRouter = require("./routes/admin.route");
 
 // Express init
 app.use(express.json());
@@ -25,7 +26,8 @@ app.all("/", (req, res) => {
 app.use(authMiddleware);
 app.use("/v1", authRouter);
 app.use("/v1/foods", foodsRouter);
-app.use("/v1/users", usersRouter);
+app.use("/v1", userRouter);
+app.use("/v1", adminRouter);
 
 /**
  * Last error handler

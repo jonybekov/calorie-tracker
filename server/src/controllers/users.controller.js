@@ -35,11 +35,13 @@ async function updateAuthUser(req, res, next) {
   }
 }
 
-async function checkCalorieLimit(req, res, next) {
-  const { consumedAt } = req;
-  const [_, token] = req.headers.authorization.split(" ");
-  const user = await userService.getUserByToken(token);
-  const result = await userService.checkCalorieLimit(user.id, consumedAt);
+async function checkCalorieLimit(req, res) {
+  const { startDate, endDate } = req.query;
+  const result = await userService.checkCalorieLimit({
+    userId: req.user.id,
+    startDate,
+    endDate,
+  });
 
   res.json(result);
 }

@@ -1,7 +1,5 @@
 import { PlusSquareIcon } from "@chakra-ui/icons";
 import {
-  Alert,
-  AlertIcon,
   Box,
   Button,
   Center,
@@ -31,12 +29,11 @@ import { useState } from "react";
 import { Moment } from "moment";
 import { AxiosError } from "axios";
 import { ErrorCode, IErrorResponse } from "../shared/types";
-import { isAuthenticated } from "../shared/helpers";
 import { useGlobalContext } from "../app/contexts/global.context";
 import moment from "moment";
+import { DailyCalorieAlert } from "./daily-calorie-alert";
 
 export function FoodEntries() {
-  const { user } = useGlobalContext();
   const [isAddOpen, setIsAddOpen] = useBoolean();
   const toast = useToast();
   const [startDate, setStartDate] = useState<Moment | null>(null);
@@ -60,10 +57,12 @@ export function FoodEntries() {
       enabled: true,
     }
   );
-  const { data: calorieLimit } = useQuery(
-    ["check_daily_calorie"],
+  const { data: totalCalories } = useQuery(
+    ["check_daily_calorie", { startDate, endDate }],
     checkCalorieLimit
   );
+
+  const isWarningVisible = totalCalories?.some((item) => item.is_exceeded);
 
   const mutation = useMutation(createFood, {
     onSuccess: () => {
@@ -78,9 +77,7 @@ export function FoodEntries() {
     },
   });
 
-  const handleAdd = (newFood: IFoodForm) => {
-    mutation.mutate(newFood);
-  };
+  const handleAdd = (newFood: IFoodForm) => mutation.mutate(newFood);
 
   return (
     <>
@@ -96,23 +93,15 @@ export function FoodEntries() {
             endDateId="end"
             endDate={endDate}
             onDatesChange={({ startDate, endDate }) => {
-              setStartDate(moment(startDate).utc().startOf("day"));
-              setEndDate(moment(endDate).utc().endOf("day"));
+              setStartDate(moment(startDate).startOf("day").utc());
+              setEndDate(moment(endDate).endOf("day").utc());
             }}
             focusedInput={focusedInput}
             onFocusChange={setFocusedInput}
           />
         </Box>
       </Flex>
-      {calorieLimit?.is_exceeded && (
-        <Alert borderRadius="lg" status="warning" mb="2">
-          <AlertIcon />
-          You reached your daily calorie limit of {
-            user?.daily_calorie_limit
-          }{" "}
-          kcal
-        </Alert>
-      )}
+      {isWarningVisible && <DailyCalorieAlert totalCalories={totalCalories} />}
       <Divider />
 
       <List my="5" spacing={2}>

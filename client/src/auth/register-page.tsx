@@ -11,7 +11,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { register as signUp } from "../shared/api";
+import { queryClient, register as signUp } from "../shared/api";
 import { AuthLayout } from "../shared/layouts";
 import { IRegisterForm } from "../shared/types";
 
@@ -29,6 +29,7 @@ export function RegisterPage() {
   const mutation = useMutation(["register"], signUp, {
     onSuccess(data) {
       localStorage.setItem("access_token", data.access_token);
+      queryClient.invalidateQueries(["me"]);
       navigate("/");
     },
     onError(error: any) {

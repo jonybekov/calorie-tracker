@@ -13,7 +13,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { login } from "../shared/api";
+import { login, queryClient } from "../shared/api";
 import { AuthLayout } from "../shared/layouts";
 import { ILoginForm } from "../shared/types";
 
@@ -30,6 +30,7 @@ export function LoginPage() {
   const mutation = useMutation(["login"], login, {
     onSuccess(data) {
       localStorage.setItem("access_token", data.access_token);
+      queryClient.invalidateQueries(["me"]);
       navigate("/");
     },
     onError(error: any) {

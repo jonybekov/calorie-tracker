@@ -10,6 +10,7 @@ import {
   useOutsideClick,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
+import { useGlobalContext } from "../app/contexts/global.context";
 import { formatPrice } from "../shared/helpers";
 import { IFood, IFoodForm } from "../shared/types/food";
 import { MobileSpinner } from "./mobile-spinner";
@@ -31,6 +32,8 @@ export function FoodEntryForm({
   onClickOutside,
   mode = "create",
 }: IProps) {
+  const { user } = useGlobalContext();
+
   const ref = useRef<HTMLDivElement | null>(null);
 
   useOutsideClick({
@@ -110,6 +113,7 @@ export function FoodEntryForm({
             placeholder="Food name here..."
           />
           <MobileSpinner
+            max={user?.daily_calorie_limit}
             value={formValues.caloriesValue}
             onChange={(_, value) => {
               setFormValues((val) => ({

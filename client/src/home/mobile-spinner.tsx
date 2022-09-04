@@ -11,12 +11,10 @@ import {
 export function MobileSpinner(props: UseNumberInputProps) {
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
     useNumberInput({
-      ...props,
       step: 10,
       defaultValue: 0,
       min: 0,
-      max: 2100,
-      precision: 1,
+      ...props,
     });
 
   const inc = getIncrementButtonProps();

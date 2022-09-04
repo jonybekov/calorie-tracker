@@ -40,6 +40,13 @@ const QUERY_CALORIES_SUM_BY_DATE = `
   WHERE user_id = $1
 `;
 
+const QUERY_DAILY_CALORIES_BY_RANGE = `
+  SELECT u.id, u.first_name, dtp.consumed_at, dtp.daily_calories, dtp.daily_calories > u.daily_calorie_limit AS is_exceeded
+  FROM users AS u
+  INNER JOIN daily_total_price dtp on u.id = dtp.user_id
+  WHERE u.id = $1 AND consumed_at BETWEEN $2 and $3
+`;
+
 const QUERY_USER_SPENDINGS_FOR_ONE_MONTH = `
   SELECT SUM(price) FROM foods
   WHERE consumed_at > $1 - INTERVAL '1 month'
@@ -105,10 +112,14 @@ async function updateFood(id, data) {
   return result.rows[0];
 }
 
-async function getUserTotalCaloriesByDate(userId, date) {
-  const result = await db.queryParams(QUERY_CALORIES_SUM_BY_DATE, [userId]);
+async function getUserTotalCaloriesByDate({ userId, startDate, endDate }) {
+  const result = await db.queryParams(QUERY_DAILY_CALORIES_BY_RANGE, [
+    userId,
+    startDate,
+    endDate,
+  ]);
 
-  return result.rows[0];
+  return result.rows;
 }
 
 async function getUserTotalSpendingsForOneMonth(userId, endDate) {

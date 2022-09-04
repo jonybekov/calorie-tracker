@@ -63,6 +63,8 @@ export function FoodEntry({ data }: IProps) {
   };
 
   const handleUpdate = (formData: IFoodForm) => {
+    console.log(formData);
+
     updateMutation.mutate({ id: data.id, ...formData });
     setIsUpdateOpen.off();
   };

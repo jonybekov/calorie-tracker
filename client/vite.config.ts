@@ -7,10 +7,10 @@ export default defineConfig({
   define: {
     global: "window",
   },
+
   server: {
     port: 8080,
-  },
-  preview: {
-    port: 8080,
+    host: true,
+    hmr: true,
   },
 });
