@@ -54,7 +54,7 @@ export function UsersTable() {
                     {row.first_name} {row.last_name}
                   </Text>
                   <Text fontSize="xs" color="gray.500">
-                    {row.login}
+                    @{row.login}
                   </Text>
                 </VStack>
               </HStack>

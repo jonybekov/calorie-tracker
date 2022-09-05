@@ -12,7 +12,7 @@ export const getUsers = async (): Promise<IList<IUser>> => {
 
 export const getUser = async ({
   queryKey: [_key, userId],
-}: QueryFunctionContext<IQueryKey<string>>): Promise<IList<IUser>> => {
+}: QueryFunctionContext<IQueryKey<string>>): Promise<IUser> => {
   return (await request.get(`/users/${userId}`)).data;
 };
 
@@ -21,5 +21,5 @@ export const getUserFoods = async ({
 }: QueryFunctionContext<IQueryKey<string>>): Promise<IList<IFood>> => {
   const [_key, userId] = queryKey;
 
-  return await request.get(`/users/${userId}/foods`);
+  return (await request.get(`/users/${userId}/foods`)).data;
 };

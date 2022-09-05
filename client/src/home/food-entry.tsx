@@ -3,9 +3,6 @@ import {
   Fade,
   IconButton,
   ListItem,
-  ScaleFade,
-  Slide,
-  SlideFade,
   Spacer,
   Text,
   useBoolean,
@@ -15,7 +12,7 @@ import { useMutation } from "@tanstack/react-query";
 import { deleteFood, queryClient, updateFood } from "../shared/api";
 import { ID } from "../shared/types";
 import { IFood, IFoodForm } from "../shared/types/food";
-import { FoodEntryForm } from "./food-entry-form";
+import { FoodEntryForm } from "../shared/components/food-entry-form";
 
 interface IProps {
   data: IFood;

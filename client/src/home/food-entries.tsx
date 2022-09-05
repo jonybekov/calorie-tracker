@@ -22,7 +22,7 @@ import {
 } from "../shared/api";
 import { IFoodForm } from "../shared/types/food";
 import { FoodEntry } from "./food-entry";
-import { FoodEntryForm } from "./food-entry-form";
+import { FoodEntryForm } from "../shared/components/food-entry-form";
 
 import { DateRangePicker, FocusedInputShape } from "react-dates";
 import { useState } from "react";

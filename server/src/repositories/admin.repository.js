@@ -10,7 +10,7 @@ const QUERY_USER_BY_ID = `
 `;
 
 const QUERY_USER_FOODS_BY_ID = `
-    SELECT * FROM simple_user_foods
+    SELECT * FROM simple_users_foods
     WHERE user_id = $1
 `;
 

@@ -25,3 +25,5 @@ export interface IErrorResponse {
   message: string;
   code: number;
 }
+
+export type FormMode = "edit" | "create";
