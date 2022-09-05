@@ -30,8 +30,8 @@ export function LoginPage() {
   const mutation = useMutation(["login"], login, {
     onSuccess(data) {
       localStorage.setItem("access_token", data.access_token);
-      queryClient.invalidateQueries(["me"]);
       navigate("/");
+      queryClient.invalidateQueries(["me"]);
     },
     onError(error: any) {
       setError("login", { message: error.response.data.message });

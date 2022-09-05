@@ -1,11 +1,12 @@
 const db = require("../services/db.service");
 
-const QUERY_FOODS = `
+const QUERY_USER_FOODS = `
   SELECT * FROM foods
-  WHERE consumed_at BETWEEN $1 and $2
+  WHERE user_id = $1
+  AND consumed_at BETWEEN $2 AND $3
   ORDER BY created_at DESC
-  LIMIT $3
-  OFFSET (($4 - 1) * $3);
+  LIMIT $4
+  OFFSET (($5 - 1) * $4);
 `;
 
 const QUERY_FOOD_BY_ID = `
@@ -59,8 +60,9 @@ const DELETE_FOOD = `
   RETURNING *;
 `;
 
-async function findAllFoods({ startDate, endDate, size, page }) {
-  const { rows, rowCount } = await db.queryParams(QUERY_FOODS, [
+async function findAllFoods({ userId, startDate, endDate, size, page }) {
+  const { rows, rowCount } = await db.queryParams(QUERY_USER_FOODS, [
+    userId,
     startDate,
     endDate,
     size,

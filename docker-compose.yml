@@ -9,19 +9,10 @@ services:
       POSTGRES_USER: azizbek
       POSTGRES_PASSWORD: 12345
       TZ: Asia/Tashkent
-    # volumes:
-    #   - ./db/data:/var/lib/postgresql/data
-  # nginx:
-  #   container_name: nginx
-  #   depends_on:
-  #     - api
-  #     - client
-  #   restart: always
-  #   build:
-  #     dockerfile: Dockerfile.dev
-  #     context: ./nginx
-  #   ports:
-  #     - "3050:80"
+    ports:
+      - 5433:5432
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
   api:
     container_name: api
     build:

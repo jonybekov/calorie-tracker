@@ -49,6 +49,7 @@ async function getAll(req, res) {
   const { startDate, endDate, page, size } = req.query;
 
   const foods = await foodsService.getAllFoods({
+    userId: req.user.id,
     startDate,
     endDate,
     page,
