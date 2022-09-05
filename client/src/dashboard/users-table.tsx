@@ -1,4 +1,3 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Table,
@@ -8,18 +7,12 @@ import {
   Thead,
   Tr,
   Text,
-  Flex,
   HStack,
   Badge,
   Menu,
   MenuButton,
   MenuList,
   MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuDivider,
-  Button,
   IconButton,
   VStack,
 } from "@chakra-ui/react";
@@ -27,7 +20,7 @@ import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 import { getUsers } from "../shared/api/admin";
 
-import { ReactComponent as DotsIcon } from "../assets/dots.svg";
+import { ReactComponent as DotsIcon } from "../shared/assets/dots.svg";
 import { Link } from "react-router-dom";
 
 export function UsersTable() {
@@ -45,7 +38,7 @@ export function UsersTable() {
       </Thead>
       <Tbody>
         {data?.data?.map((row) => (
-          <Tr>
+          <Tr key={row.id}>
             <Td>
               <HStack>
                 <Avatar src={row.avatar} mr="2" />

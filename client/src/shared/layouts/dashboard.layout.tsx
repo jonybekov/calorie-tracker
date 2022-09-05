@@ -70,7 +70,7 @@ export function DashboardLayout() {
         </Box>
       </GridItem>
       <GridItem>
-        <Container maxW="container.lg">
+        <Container maxW="container.xl" px="8">
           <Outlet />
         </Container>
       </GridItem>

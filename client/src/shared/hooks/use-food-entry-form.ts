@@ -1,5 +1,7 @@
+import { useToast } from "@chakra-ui/react";
 import { useState } from "react";
-import { FormMode, IFood, IFoodForm } from "../types";
+import { GENERIC_ERROR_MESSAGE } from "../helpers";
+import { FormMode, ID, IFood, IFoodForm } from "../types";
 
 type Errors = Partial<Record<keyof IFood, string>>;
 
@@ -18,6 +20,7 @@ export const useFoodEntryForm = ({
     initialValues ?? {}
   );
   const [errors, setErrors] = useState<Errors>();
+  const toast = useToast();
 
   const reset = () => {
     if (mode === "create") {
@@ -53,7 +56,10 @@ export const useFoodEntryForm = ({
       reset();
       onSubmit(formValues as IFoodForm);
     } catch (err) {
-      console.error(err);
+      toast({
+        title: GENERIC_ERROR_MESSAGE,
+        status: "error",
+      });
     }
   };
 

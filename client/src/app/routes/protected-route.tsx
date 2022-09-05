@@ -1,5 +1,6 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import { isAuthenticated } from "../../shared/helpers";
 import { Role } from "../../shared/types";
 import { useGlobalContext } from "../contexts/global.context";
 
@@ -13,15 +14,15 @@ export const ProtectedRoute = ({
 }: React.PropsWithChildren<IProtectedRouteProps>) => {
   const { user, isLoading } = useGlobalContext();
 
-  if (user === null && !isLoading)
+  if (!isAuthenticated() || (user === null && !isLoading))
     return (
       <Navigate
-        to={{ pathname: "/login", search: `redirect=${location.pathname}` }}
+        to={{ pathname: "login", search: `redirect=${location.pathname}` }}
         replace
       />
     );
 
-  if (user && user.role === Role.Admin) {
+  if (user && user.role !== Role.Admin) {
     return <Navigate to={redirectPath} replace />;
   }
 

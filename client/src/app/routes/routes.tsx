@@ -25,10 +25,8 @@ export function Routes() {
             <Route path="dashboard/users/:id" element={<UserPage />} />
           </Route>
         </Route>
-        <Route element={<ProtectedRoute />}>
-          <Route path="login" element={<LoginPage />} />
-          <Route path="register" element={<RegisterPage />} />
-        </Route>
+        <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
         <Route path="access-denied" element={<AccessDenied />} />
         <Route path="*" element={<NotFound />} />
       </BrowserRoutes>

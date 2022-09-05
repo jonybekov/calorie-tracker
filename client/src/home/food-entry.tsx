@@ -13,6 +13,7 @@ import { deleteFood, queryClient, updateFood } from "../shared/api";
 import { ID } from "../shared/types";
 import { IFood, IFoodForm } from "../shared/types/food";
 import { FoodEntryForm } from "../shared/components/food-entry-form";
+import { convertFoodEntryToForm } from "../shared/helpers";
 
 interface IProps {
   data: IFood;
@@ -21,13 +22,7 @@ interface IProps {
 export function FoodEntry({ data }: IProps) {
   const toast = useToast();
   const [isUpdateOpen, setIsUpdateOpen] = useBoolean();
-
-  const dataAsFormValues: IFoodForm = {
-    name: data.name,
-    price: data.price || 0,
-    consumedAt: data.consumed_at,
-    caloriesValue: data.calorie_value || 0,
-  };
+  const dataAsFormValues = convertFoodEntryToForm(data);
 
   const deleteMutation = useMutation(deleteFood, {
     onSuccess: () => {

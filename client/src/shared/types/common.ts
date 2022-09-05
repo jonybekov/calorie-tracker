@@ -9,6 +9,8 @@ export enum ErrorCode {
 
 export type ID = number;
 
+export type WithID<T> = { id: ID } & T;
+
 export interface IList<T = unknown> {
   data: T[];
   count: number;

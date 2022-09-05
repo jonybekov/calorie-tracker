@@ -13,3 +13,8 @@ export interface IStatistics {
     }[];
   };
 }
+
+export interface IFoodFormParams {
+  userId?: ID;
+  foodId?: ID;
+}

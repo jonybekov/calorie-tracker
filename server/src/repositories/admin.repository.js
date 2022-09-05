@@ -16,7 +16,7 @@ const QUERY_USER_FOODS_BY_ID = `
 
 const QUERY_WEEKLY_FOOD_ENTRIES_COUNT = `
     SELECT COUNT(*) AS count FROM simple_users_foods
-    WHERE consumed_at BETWEEN date_trunc('day', $1::timestamp) - INTERVAL '7 day' AND date_trunc('day', $1::timestamp) + INTERVAL '1 day' - INTERVAL '1 second'
+    WHERE consumed_at BETWEEN date_trunc('day', $1::timestamptz) - INTERVAL '7 day' AND date_trunc('day', $1::timestamptz) + INTERVAL '1 day' - INTERVAL '1 second'
 `;
 
 const QUERY_AVERAGE_CALORIES_PER_USER_FOR_LAST_WEEK = `
@@ -48,6 +48,8 @@ async function findUserFoods(userId) {
 }
 
 async function calcWeeklyFoodEntriesCount(startDate) {
+  console.log(startDate);
+
   const result = await db.queryParams(QUERY_WEEKLY_FOOD_ENTRIES_COUNT, [
     startDate,
   ]);

@@ -1,5 +1,13 @@
 import { QueryFunctionContext } from "@tanstack/react-query";
-import { IFood, IList, IQueryKey, IStatistics, IUser } from "../types";
+import {
+  IFood,
+  IFoodForm,
+  IFoodFormParams,
+  IList,
+  IQueryKey,
+  IStatistics,
+  IUser,
+} from "../types";
 import { request } from "./api-instance";
 
 export const getStatistics = async (): Promise<IStatistics> => {
@@ -17,9 +25,26 @@ export const getUser = async ({
 };
 
 export const getUserFoods = async ({
-  queryKey,
+  queryKey: [_key, userId],
 }: QueryFunctionContext<IQueryKey<string>>): Promise<IList<IFood>> => {
-  const [_key, userId] = queryKey;
-
   return (await request.get(`/users/${userId}/foods`)).data;
+};
+
+export const createUserFood = async ({
+  userId,
+  ...payload
+}: IFoodForm & IFoodFormParams) => {
+  return (await request.post(`/users/${userId}/foods`, payload)).data;
+};
+
+export const updateUserFood = async ({
+  userId,
+  foodId,
+  ...payload
+}: IFoodForm & IFoodFormParams) => {
+  return (await request.put(`/users/${userId}/foods/${foodId}`, payload)).data;
+};
+
+export const deleteUserFood = async ({ userId, foodId }: IFoodFormParams) => {
+  return (await request.delete(`/users/${userId}/foods/${foodId}`)).data;
 };

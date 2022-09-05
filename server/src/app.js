@@ -3,6 +3,10 @@ require("dotenv").config();
 const http = require("http");
 const cors = require("cors");
 
+const dayjs = require("dayjs");
+const utc = require("dayjs/plugin/utc");
+dayjs.extend(utc);
+
 const express = require("express");
 const app = express();
 const server = http.createServer(app);

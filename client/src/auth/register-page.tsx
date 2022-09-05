@@ -29,8 +29,9 @@ export function RegisterPage() {
   const mutation = useMutation(["register"], signUp, {
     onSuccess(data) {
       localStorage.setItem("access_token", data.access_token);
-      navigate("/");
       queryClient.invalidateQueries(["me"]);
+
+      setTimeout(() => navigate("/"));
     },
     onError(error: any) {
       setError("login", { message: error.response.data.message });

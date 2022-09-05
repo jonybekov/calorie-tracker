@@ -11,26 +11,94 @@ import {
   HStack,
   Spacer,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { getUserFoods, getUser } from "../shared/api";
+import {
+  getUserFoods,
+  getUser,
+  createUserFood,
+  queryClient,
+  updateUserFood,
+  deleteUserFood,
+} from "../shared/api";
 import { FoodsTable } from "./foods-table";
 import { ReactComponent as PlusIcon } from "../shared/assets/plus.svg";
 import { FoodEntryForm } from "../shared/components";
 import { useState } from "react";
-import { FormMode, IFood } from "../shared/types";
+import {
+  FormMode,
+  IErrorResponse,
+  IFood,
+  IFoodForm,
+  WithID,
+} from "../shared/types";
+import { AxiosError } from "axios";
+import {
+  convertFoodEntryToForm,
+  GENERIC_ERROR_MESSAGE,
+} from "../shared/helpers";
 
 export function UserPage() {
   const { id: userId } = useParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [formMode, setFormMode] = useState<FormMode>("create");
-  const [editingRow, setEditingRow] = useState<IFood | null>(null);
+  const [editingRow, setEditingRow] = useState<WithID<IFoodForm> | null>(null);
+  const toast = useToast();
 
   if (!userId) return null;
 
   const { data: userInfo } = useQuery(["user", userId], getUser);
   const { data: userFoods } = useQuery(["user-foods", userId], getUserFoods);
+
+  const onSuccess = (message: string) => () => {
+    queryClient.invalidateQueries(["user-foods"]);
+    onClose();
+    toast({
+      title: message,
+      status: "success",
+    });
+  };
+
+  const onError = (error: AxiosError<IErrorResponse>) => {
+    toast({
+      title: error.response?.data.message || GENERIC_ERROR_MESSAGE,
+      status: "error",
+    });
+  };
+
+  const createMutation = useMutation(createUserFood, {
+    onSuccess: onSuccess("Entry successfully added"),
+    onError,
+  });
+
+  const updateMutation = useMutation(updateUserFood, {
+    onSuccess: onSuccess("Entry successfully updated"),
+    onError,
+  });
+
+  const deleteMutation = useMutation(deleteUserFood, {
+    onSuccess: onSuccess("Entry successfully deleted"),
+  });
+
+  const handleSubmit = (formValues: IFoodForm) => {
+    if (formMode === "create") {
+      createMutation.mutate({ userId: Number(userId), ...formValues });
+    } else if (formMode === "edit") {
+      updateMutation.mutate({
+        userId: Number(userId),
+        foodId: editingRow?.id,
+        ...formValues,
+      });
+    }
+  };
+
+  const onDelete = ({ id: foodId }: IFood) => {
+    deleteMutation.mutate({ userId: Number(userId), foodId });
+  };
+
+  const { id: foodId, ...editingRowForm } = editingRow || {};
 
   return (
     <Box py="4">
@@ -52,10 +120,10 @@ export function UserPage() {
         data={userFoods?.data}
         onEdit={(row) => {
           setFormMode("edit");
-          setEditingRow(row);
+          setEditingRow({ id: row.id, ...convertFoodEntryToForm(row) });
           onOpen();
         }}
-        onDelete={alert}
+        onDelete={onDelete}
       />
 
       <Drawer
@@ -74,10 +142,10 @@ export function UserPage() {
           <DrawerCloseButton />
           <DrawerBody>
             <FoodEntryForm
-              initialValues={editingRow as any}
+              initialValues={editingRowForm!}
               mode={formMode}
               consumer="admin"
-              onSubmit={() => {}}
+              onSubmit={handleSubmit}
             />
           </DrawerBody>
         </DrawerContent>

@@ -1,18 +1,18 @@
 import {
-  Box,
   Button,
-  Container,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
   Input,
-  Link,
   Text,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import {
+  Link as RouterLink,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { login, queryClient } from "../shared/api";
 import { AuthLayout } from "../shared/layouts";
 import { ILoginForm } from "../shared/types";
@@ -26,11 +26,16 @@ export function LoginPage() {
   } = useForm<ILoginForm>();
 
   const navigate = useNavigate();
+  const searchParams = useSearchParams();
 
   const mutation = useMutation(["login"], login, {
     onSuccess(data) {
       localStorage.setItem("access_token", data.access_token);
-      navigate("/");
+      const redirectUrl = new URLSearchParams(window.location.search).get(
+        "redirect"
+      );
+      navigate(redirectUrl ?? "/");
+      searchParams;
       queryClient.invalidateQueries(["me"]);
     },
     onError(error: any) {
