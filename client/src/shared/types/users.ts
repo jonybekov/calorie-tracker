@@ -1,5 +1,10 @@
 import { ID } from "./common";
 
+export enum Role {
+  Admin = "ADMIN",
+  User = "USER",
+}
+
 export interface IUser {
   id: ID;
   first_name: string;
@@ -10,6 +15,7 @@ export interface IUser {
   login?: string;
   created_at?: string;
   modified_at?: string;
+  role: Role;
 }
 
 export type DailyCaloriesResult = {

@@ -16,7 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { getUserFoods, getUser } from "../shared/api";
 import { FoodsTable } from "./foods-table";
-import { ReactComponent as PlusIcon } from "../assets/plus.svg";
+import { ReactComponent as PlusIcon } from "../shared/assets/plus.svg";
 import { FoodEntryForm } from "../shared/components";
 import { useState } from "react";
 import { FormMode, IFood } from "../shared/types";

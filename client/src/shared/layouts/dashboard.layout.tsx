@@ -10,9 +10,9 @@ import {
   Grid,
 } from "@chakra-ui/react";
 import { NavLink, Outlet } from "react-router-dom";
-import { ReactComponent as AnalyticsIcon } from "../../assets/analytics.svg";
-import { ReactComponent as UsersIcon } from "../../assets/users.svg";
-import { ReactComponent as SettingsIcon } from "../../assets/settings.svg";
+import { ReactComponent as AnalyticsIcon } from "../../shared/assets/analytics.svg";
+import { ReactComponent as UsersIcon } from "../../shared/assets/users.svg";
+import { ReactComponent as SettingsIcon } from "../../shared/assets/settings.svg";
 
 const menuItems = [
   {

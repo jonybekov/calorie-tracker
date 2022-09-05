@@ -1,15 +1,6 @@
-import {
-  Box,
-  chakra,
-  Divider,
-  Flex,
-  Heading,
-  HStack,
-  Icon,
-  Text,
-} from "@chakra-ui/react";
+import { Box, chakra, Flex, Heading, HStack, Text } from "@chakra-ui/react";
 import { IStatistics } from "../shared/types";
-import { ReactComponent as Increase } from "../assets/increase.svg";
+import { ReactComponent as Increase } from "../shared/assets/increase.svg";
 
 const IncreaseIcon = chakra(Increase);
 
@@ -19,7 +10,6 @@ interface IProps {
 
 export function Stats({ data }: IProps) {
   const { last_week = 0, before_last_week = 0 } = data || {};
-
   const change = Math.floor(last_week - before_last_week / last_week) * 100;
   const hasIncreased = last_week > before_last_week ? true : false;
   const color = hasIncreased ? "green.500" : "red.500";

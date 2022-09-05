@@ -11,17 +11,10 @@ import {
   MenuItem,
   IconButton,
   useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Button,
 } from "@chakra-ui/react";
 import moment from "moment";
 
-import { ReactComponent as DotsIcon } from "../assets/dots.svg";
+import { ReactComponent as DotsIcon } from "../shared/assets/dots.svg";
 import { IFood } from "../shared/types";
 import { formatPrice } from "../shared/helpers";
 import { ConfirmationModal } from "../shared/components";

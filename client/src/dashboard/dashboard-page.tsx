@@ -4,11 +4,10 @@ import { Link } from "react-router-dom";
 import { useGlobalContext } from "../app/contexts/global.context";
 import { getStatistics } from "../shared/api/admin";
 import { Stats } from "./stats";
-import { UsersTable } from "./users-table";
 
 export function DashboardPage() {
   const { user } = useGlobalContext();
-  const { isLoading, data } = useQuery(["statistics"], getStatistics);
+  const { data } = useQuery(["statistics"], getStatistics);
 
   return (
     <Box>
