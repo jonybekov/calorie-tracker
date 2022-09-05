@@ -1,8 +1,7 @@
 const db = require("../services/db.service");
 
 const QUERY_USERS = `
-    SELECT * FROM users
-    WHERE role = 'USER'
+    SELECT * FROM simple_users
 `;
 
 const QUERY_USER_BY_ID = `
@@ -49,8 +48,6 @@ async function findUserFoods(userId) {
 }
 
 async function calcWeeklyFoodEntriesCount(startDate) {
-  console.log(startDate);
-
   const result = await db.queryParams(QUERY_WEEKLY_FOOD_ENTRIES_COUNT, [
     startDate,
   ]);

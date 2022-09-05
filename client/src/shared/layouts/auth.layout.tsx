@@ -10,11 +10,13 @@ export function AuthLayout({
   children,
 }: React.PropsWithChildren<IProps>) {
   return (
-    <Container maxW="sm">
-      <Box py="10">
-        <Heading mb="8">{title}</Heading>
-        {children}
-      </Box>
+    <Container maxW="container.sm">
+      <Container maxW="sm">
+        <Box py="10">
+          <Heading mb="8">{title}</Heading>
+          {children}
+        </Box>
+      </Container>
     </Container>
   );
 }

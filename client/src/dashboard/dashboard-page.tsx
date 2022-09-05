@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useGlobalContext } from "../app/contexts/global.context";
 import { getStatistics } from "../shared/api/admin";
 import { Stats } from "./stats";
+import { UsersTable } from "./users-table";
 
 export function DashboardPage() {
   const { user } = useGlobalContext();
@@ -11,9 +12,9 @@ export function DashboardPage() {
 
   return (
     <Box>
-      <Flex align="center" justify="space-between" width="full">
-        <Box pt="4">
-          <Heading color="gray.400">Hello,</Heading>
+      <Flex align="center" mb="4" justify="space-between" width="full">
+        <Box pt="4" mb="4">
+          <Heading color="gray.400">Good Day,</Heading>
           <Heading>{user?.first_name}</Heading>
         </Box>
 

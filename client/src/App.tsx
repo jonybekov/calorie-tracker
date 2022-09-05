@@ -18,6 +18,9 @@ import { AppLayout } from "./shared/layouts";
 
 import "react-dates/lib/css/_datepicker.css";
 import { DashboardPage } from "./dashboard/dashboard-page";
+import { DashboardLayout } from "./shared/layouts/dashboard.layout";
+import { UsersPage } from "./dashboard/users-page";
+import { UserPage } from "./dashboard/user-page";
 
 const Fonts = () => {
   return (
@@ -56,7 +59,11 @@ function App() {
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="dashboard" element={<DashboardPage />} />
+                <Route element={<DashboardLayout />}>
+                  <Route path="dashboard" element={<DashboardPage />} />
+                  <Route path="dashboard/users" element={<UsersPage />} />
+                  <Route path="dashboard/users/:id" element={<UserPage />} />
+                </Route>
                 <Route path="login" element={<LoginPage />} />
                 <Route path="register" element={<RegisterPage />} />
               </Routes>

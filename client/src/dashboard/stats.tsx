@@ -31,6 +31,7 @@ export function Stats({ data }: IProps) {
       borderColor="gray.300"
       borderRadius="lg"
       p="4"
+      maxWidth="400px"
     >
       <Box>
         <Heading

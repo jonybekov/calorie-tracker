@@ -7,14 +7,14 @@ export enum ErrorCode {
   ServerError = 500,
 }
 
-export type ID = string;
+export type ID = number;
 
 export interface IList<T = unknown> {
   data: T[];
   count: number;
 }
 
-export type IQueryKey = [string, IRangeParams];
+export type IQueryKey<T = IRangeParams> = [string, T];
 
 export interface IRangeParams {
   startDate?: Moment | null;

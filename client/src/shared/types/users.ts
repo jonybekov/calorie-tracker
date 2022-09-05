@@ -7,6 +7,9 @@ export interface IUser {
   avatar?: string;
   monthly_budget_limit?: number;
   daily_calorie_limit?: number;
+  login?: string;
+  created_at?: string;
+  modified_at?: string;
 }
 
 export type DailyCaloriesResult = {

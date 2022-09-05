@@ -1,5 +1,7 @@
+import { ID } from "./common";
+
 export interface IFood {
-  id: string;
+  id: ID;
   name: string;
   calorie_value: number;
   price: number;

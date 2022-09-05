@@ -1,13 +1,19 @@
 const dayjs = require("dayjs");
 const adminRepository = require("../repositories/admin.repository");
+const userRepository = require("../repositories/user.repository");
 const { DATE_FORMAT } = require("../utils/consts");
 
 function getAllUsers() {
   const users = adminRepository.findAllUsers();
   return users;
 }
-function getUser() {}
-function getUserFoods() {
+
+function getUser(userId) {
+  const user = userRepository.findUserById(userId);
+  return user;
+}
+
+function getUserFoods(userId) {
   const foods = adminRepository.findUserFoods(userId);
   return foods;
 }

@@ -1,13 +1,11 @@
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 const dayjs = require("dayjs");
-const { DATE_FORMAT } = require("../utils/consts");
+const { BYCRIPT_SALT } = require("../utils/consts");
 
 const userRepository = require("../repositories/user.repository");
 const foodsRepository = require("../repositories/foods.repository");
 const { isNone } = require("../utils/helpers");
-
-const SALT = 10;
 
 async function getUserByToken(token) {
   return userRepository.findUserByToken(token);
@@ -70,7 +68,7 @@ async function checkAuth(login, password) {
 }
 
 async function registerUser(firstName, lastName, avatar, login, password) {
-  const passwordHash = await bcrypt.hash(password, SALT);
+  const passwordHash = await bcrypt.hash(password, BYCRIPT_SALT);
   const token = uuidv4();
 
   const newUser = await userRepository.saveUser(

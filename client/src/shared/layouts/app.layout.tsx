@@ -6,7 +6,7 @@ export function AppLayout({ children }: React.PropsWithChildren) {
   const { isLoading } = useGlobalContext();
 
   return (
-    <Container maxW="container.sm">
+    <>
       {isLoading ? (
         <Center py="10" height="100vh">
           <CircularProgress thickness="4px" isIndeterminate />
@@ -14,6 +14,6 @@ export function AppLayout({ children }: React.PropsWithChildren) {
       ) : (
         <Fade in={!isLoading}>{children}</Fade>
       )}
-    </Container>
+    </>
   );
 }
