@@ -1,4 +1,4 @@
-import { Center, CircularProgress, Container, Fade } from "@chakra-ui/react";
+import { Center, CircularProgress, Fade } from "@chakra-ui/react";
 import React from "react";
 import { useGlobalContext } from "../../app/contexts/global.context";
 

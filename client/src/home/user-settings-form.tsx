@@ -20,18 +20,16 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
-import { useGlobalContext } from "../app/contexts/global.context";
 import { queryClient, updateMe } from "../shared/api";
 import { formatPrice, normalizePrice } from "../shared/helpers";
 import { IErrorResponse, IUser } from "../shared/types";
 
 interface IProps {
+  user: IUser | null;
   onClose?: () => void;
 }
 
-export const UserSettingsForm = ({ onClose }: IProps) => {
-  const { user } = useGlobalContext();
-
+export const UserSettingsForm = ({ user, onClose }: IProps) => {
   const toast = useToast();
   const {
     register,

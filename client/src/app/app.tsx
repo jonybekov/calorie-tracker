@@ -13,14 +13,14 @@ import "react-dates/lib/css/_datepicker.css";
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ChakraProvider theme={theme}>
-        <Fonts />
-        <GlobalContextProvider>
+      <GlobalContextProvider>
+        <ChakraProvider theme={theme}>
+          <Fonts />
           <AppLayout>
             <Routes />
           </AppLayout>
-        </GlobalContextProvider>
-      </ChakraProvider>
+        </ChakraProvider>
+      </GlobalContextProvider>
     </QueryClientProvider>
   );
 }

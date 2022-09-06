@@ -49,7 +49,7 @@ export const Header = () => {
         <Modal isOpen={isOpen} isCentered onClose={onClose}>
           <ModalOverlay />
           <ModalContent>
-            <UserSettingsForm onClose={onClose} />
+            <UserSettingsForm user={user} onClose={onClose} />
           </ModalContent>
         </Modal>
       </Flex>

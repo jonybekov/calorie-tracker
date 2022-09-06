@@ -9,6 +9,6 @@ router.post("/me", usersController.updateAuthUser);
 
 router.get("/me/check/daily-calories", usersController.checkCalorieLimit);
 
-router.post("/me/check/montly-budget", usersController.checkBudgetLimit);
+router.post("/me/check/monthly-budget", usersController.checkBudgetLimit);
 
 module.exports = router;

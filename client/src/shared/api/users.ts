@@ -22,7 +22,7 @@ export async function checkCalorieLimit({
 }
 
 export async function checkBudgetLimit(): Promise<MonthlyExpensesResult[]> {
-  return (await request.get(`/me/check/montly-budget`)).data;
+  return (await request.get(`/me/check/monthly-budget`)).data;
 }
 
 export async function updateMe(payload: Omit<IUser, "id">): Promise<IUser> {
