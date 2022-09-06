@@ -26,7 +26,6 @@ export function LoginPage() {
   } = useForm<ILoginForm>();
 
   const navigate = useNavigate();
-  const searchParams = useSearchParams();
 
   const mutation = useMutation(["login"], login, {
     onSuccess(data) {
@@ -34,9 +33,10 @@ export function LoginPage() {
       const redirectUrl = new URLSearchParams(window.location.search).get(
         "redirect"
       );
-      navigate(redirectUrl ?? "/");
-      searchParams;
       queryClient.invalidateQueries(["me"]);
+      setTimeout(() => {
+        navigate(redirectUrl ?? "/");
+      });
     },
     onError(error: any) {
       setError("login", { message: error.response.data.message });

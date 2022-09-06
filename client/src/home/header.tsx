@@ -13,15 +13,27 @@ import {
   useDisclosure,
   VStack,
   Spacer,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { useGlobalContext } from "../app/contexts";
+import { queryClient } from "../shared/api";
 import { isAuthenticated } from "../shared/helpers";
+import { Role } from "../shared/types";
 import { UserSettingsForm } from "./user-settings-form";
 
 export const Header = () => {
   const { user, isLoading } = useGlobalContext();
   const { isOpen, onClose, onOpen } = useDisclosure();
+
+  const logOut = () => {
+    localStorage.removeItem("access_token");
+    queryClient.invalidateQueries(["me"]);
+    location.reload();
+  };
 
   return (
     <VStack mb="10" align="flex-start" spacing={4}>
@@ -36,14 +48,47 @@ export const Header = () => {
             <Button>Sign In</Button>
           </Link>
         ) : (
-          <Avatar
-            transition="ease-in-out"
-            _hover={{ boxShadow: "avatar" }}
-            onClick={onOpen}
-            cursor="pointer"
-            src={user?.avatar}
-            size="lg"
-          />
+          <Menu>
+            <MenuButton color="gray.600" aria-label="actions">
+              <Avatar
+                transition="ease-in-out"
+                _hover={{ boxShadow: "avatar" }}
+                cursor="pointer"
+                src={user?.avatar}
+                size="lg"
+              />
+            </MenuButton>
+
+            <MenuList px="2" borderRadius="xl" zIndex="99">
+              {user?.role === Role.Admin && (
+                <MenuItem
+                  as={Link}
+                  to="/dashboard"
+                  fontWeight="medium"
+                  borderRadius="lg"
+                  p="3"
+                >
+                  Dashboard
+                </MenuItem>
+              )}
+              <MenuItem
+                onClick={onOpen}
+                fontWeight="medium"
+                borderRadius="lg"
+                p="3"
+              >
+                Settings
+              </MenuItem>
+              <MenuItem
+                onClick={logOut}
+                fontWeight="medium"
+                borderRadius="lg"
+                p="3"
+              >
+                Log Out
+              </MenuItem>
+            </MenuList>
+          </Menu>
         )}
 
         <Modal isOpen={isOpen} isCentered onClose={onClose}>

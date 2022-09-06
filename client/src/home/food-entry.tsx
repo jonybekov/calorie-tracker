@@ -10,7 +10,6 @@ import {
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { deleteFood, queryClient, updateFood } from "../shared/api";
-import { ID } from "../shared/types";
 import { IFood, IFoodForm } from "../shared/types/food";
 import { FoodEntryForm } from "../shared/components/food-entry-form";
 import { convertFoodEntryToForm } from "../shared/helpers";
@@ -30,7 +29,7 @@ export function FoodEntry({ data }: IProps) {
       queryClient.invalidateQueries(["foods"]);
       queryClient.invalidateQueries(["check_daily_calorie"]);
     },
-    onError(error, variables, context) {
+    onError() {
       toast({
         title: "Error occured",
         status: "error",
@@ -43,7 +42,7 @@ export function FoodEntry({ data }: IProps) {
       queryClient.invalidateQueries(["foods"]);
       queryClient.invalidateQueries(["check_daily_calorie"]);
     },
-    onError(error, variables, context) {
+    onError() {
       toast({
         title: "Error occured",
         status: "error",
@@ -77,7 +76,7 @@ export function FoodEntry({ data }: IProps) {
           {data.name}
         </Text>
         <Text fontSize="sm" color="gray.500" ml="2" fontWeight="medium">
-          {data.calorie_value} kcal, ${data.price},{" "}
+          {data.calorie_value} kcal, ${data.price}
         </Text>
         <Spacer />
         <Text fontSize="sm" color="gray.500" mr="3" fontWeight="medium">

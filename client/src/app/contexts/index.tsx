@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState, createContext, useContext } from "react";
 import { getMe } from "../../shared/api";
 import { IUser } from "../../shared/types";
@@ -17,21 +18,17 @@ export const useGlobalContext = () => useContext(GlobalContext);
 export const GlobalContextProvider = ({
   children,
 }: React.PropsWithChildren) => {
-  const [user, setUser] = useState<IUser | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { isLoading, isError, data } = useQuery(["me"], getMe, {
+    cacheTime: 0,
+    retry: false,
+  });
 
-  useEffect(() => {
-    setIsLoading(true);
-    getMe()
-      .then((data) => setUser(data))
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+  const value = {
+    user: data ?? null,
+    isLoading,
+  };
 
   return (
-    <GlobalContext.Provider value={{ user, isLoading }}>
-      {children}
-    </GlobalContext.Provider>
+    <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>
   );
 };

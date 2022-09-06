@@ -118,8 +118,6 @@ async function updateFood(id, data) {
 }
 
 async function getUserTotalCaloriesByDate({ userId, startDate, endDate }) {
-  console.log(startDate, endDate);
-
   const result = await db.queryParams(QUERY_DAILY_CALORIES_BY_RANGE, [
     userId,
     startDate,

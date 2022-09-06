@@ -109,7 +109,7 @@ export function FoodEntries() {
     if (!data) return [];
 
     const groups = data.data.reduce<Record<string, IFood[]>>((groups, item) => {
-      const date = moment(item.consumed_at).format("YYYY-MMM-DD");
+      const date = moment(item.consumed_at).format("YYYY-MM-DD");
 
       if (!groups[date]) {
         groups[date] = [];
@@ -129,7 +129,39 @@ export function FoodEntries() {
     return groupArrays;
   }, [data?.data]);
 
-  console.log(foodEntriesByDateGroup);
+  const foodsGroup = foodEntriesByDateGroup
+    .sort((a, b) => moment(b.date).unix() - moment(a.date).unix())
+    .map((group) => {
+      const formattedDate = moment(group.date).calendar(groupCalendarFormats);
+
+      return (
+        <ListItem position="relative" key={group.date}>
+          <Flex
+            position="sticky"
+            zIndex="2"
+            pb="3"
+            top="4px"
+            justifyContent="center"
+          >
+            <Box
+              color="white"
+              borderRadius="xl"
+              px="2"
+              fontSize="xs"
+              bgColor="gray.400"
+              textAlign="center"
+            >
+              {formattedDate}
+            </Box>
+          </Flex>
+          <List spacing={2}>
+            {group.entries.map((item) => (
+              <FoodEntry key={item.id} data={item} />
+            ))}
+          </List>
+        </ListItem>
+      );
+    });
 
   return (
     <>
@@ -195,42 +227,7 @@ export function FoodEntries() {
             <CircularProgress thickness="4px" isIndeterminate />
           </Center>
         ) : (
-          foodEntriesByDateGroup
-            .sort((a, b) => moment(b.date).unix() - moment(a.date).unix())
-            .map((group) => {
-              const formattedDate = moment(group.date).calendar(
-                null,
-                groupCalendarFormats
-              );
-
-              return (
-                <ListItem position="relative">
-                  <Flex
-                    position="sticky"
-                    zIndex="2"
-                    pb="3"
-                    top="4px"
-                    justifyContent="center"
-                  >
-                    <Box
-                      color="white"
-                      borderRadius="xl"
-                      px="2"
-                      fontSize="xs"
-                      bgColor="gray.400"
-                      textAlign="center"
-                    >
-                      {formattedDate}
-                    </Box>
-                  </Flex>
-                  <List spacing={2}>
-                    {group.entries.map((item) => (
-                      <FoodEntry key={item.id} data={item} />
-                    ))}
-                  </List>
-                </ListItem>
-              );
-            })
+          foodsGroup
         )}
       </List>
     </>

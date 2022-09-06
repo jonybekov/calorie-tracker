@@ -53,18 +53,22 @@ export function DashboardLayout() {
           </Flex>
           <List my="5" px="4" spacing={1}>
             {menuItems.map((item) => (
-              <ListItem
-                key={item.path}
-                borderRadius="lg"
-                _hover={{ bgColor: "blackAlpha.200" }}
-              >
-                <NavLink to={item.path}>
-                  <Flex p="3" w="full">
-                    <ListIcon fontSize="2xl" color="white" as={item.icon} />
-                    {item.title}
-                  </Flex>
-                </NavLink>
-              </ListItem>
+              <NavLink to={item.path} key={item.path} end>
+                {({ isActive }) => (
+                  <ListItem
+                    borderRadius="lg"
+                    bgColor={isActive ? "blackAlpha.200" : undefined}
+                    _hover={{
+                      bgColor: isActive ? "blackAlpha.300" : "blackAlpha.200",
+                    }}
+                  >
+                    <Flex p="3" w="full">
+                      <ListIcon fontSize="2xl" color="white" as={item.icon} />
+                      {item.title}
+                    </Flex>
+                  </ListItem>
+                )}
+              </NavLink>
             ))}
           </List>
         </Box>

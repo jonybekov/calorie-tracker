@@ -72,10 +72,13 @@ export function UsersTable() {
                   />
 
                   <MenuList px="2" borderRadius="xl">
-                    <MenuItem borderRadius="lg" p="3">
-                      <Link to={`/dashboard/users/${row.id}`}>
-                        Show Entries
-                      </Link>
+                    <MenuItem
+                      as={Link}
+                      to={`/dashboard/users/${row.id}`}
+                      borderRadius="lg"
+                      p="3"
+                    >
+                      Show Entries
                     </MenuItem>
                     <MenuItem
                       color="red.500"
