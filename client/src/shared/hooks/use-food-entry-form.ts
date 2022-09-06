@@ -1,5 +1,5 @@
 import { useToast } from "@chakra-ui/react";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { GENERIC_ERROR_MESSAGE } from "../helpers";
 import { FormMode, ID, IFood, IFoodForm } from "../types";
 
@@ -49,7 +49,9 @@ export const useFoodEntryForm = ({
     });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+
     try {
       await validate();
 

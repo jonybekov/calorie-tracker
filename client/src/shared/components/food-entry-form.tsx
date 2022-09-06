@@ -36,10 +36,9 @@ export function FoodEntryForm({
     position: "absolute",
     top: props.mode === "edit" ? "60px" : "0",
     left: "0",
-    zIndex: "1000",
+    zIndex: 1000,
     width: "full",
     bgColor: "white",
-    pb: "10",
   };
 
   useOutsideClick({
@@ -56,6 +55,8 @@ export function FoodEntryForm({
   return (
     <Box ref={ref} {...(consumer === "admin" ? undefined : wrapperStyles)}>
       <Box
+        as="form"
+        onSubmit={handleSubmit}
         boxShadow={consumer !== "admin" ? "lg" : "none"}
         borderRadius="lg"
         border={consumer !== "admin" ? "1px" : "none"}
@@ -117,7 +118,7 @@ export function FoodEntryForm({
             colorScheme="green"
             width={consumer !== "admin" ? "auto" : "full"}
             isLoading={isLoading}
-            onClick={handleSubmit}
+            type="submit"
           >
             {props.mode === "edit" ? "Update" : "Save"}
           </Button>

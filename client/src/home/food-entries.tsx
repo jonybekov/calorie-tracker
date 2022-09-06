@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
+  checkBudgetLimit,
   checkCalorieLimit,
   createFood,
   getFoods,
@@ -29,7 +30,6 @@ import { useState } from "react";
 import { Moment } from "moment";
 import { AxiosError } from "axios";
 import { ErrorCode, IErrorResponse } from "../shared/types";
-import { useGlobalContext } from "../app/contexts/global.context";
 import moment from "moment";
 import { DailyCalorieAlert } from "./daily-calorie-alert";
 
@@ -59,8 +59,19 @@ export function FoodEntries() {
   );
   const { data: totalCalories } = useQuery(
     ["check_daily_calorie", { startDate, endDate }],
-    checkCalorieLimit
+    checkCalorieLimit,
+    {
+      refetchOnWindowFocus: false,
+    }
   );
+
+  const { data: monthlyExpenses } = useQuery(
+    ["check_monthly_budget"],
+    checkBudgetLimit,
+    { refetchOnWindowFocus: false }
+  );
+
+  console.log(monthlyExpenses);
 
   const isWarningVisible = totalCalories?.some((item) => item.is_exceeded);
 
@@ -68,6 +79,7 @@ export function FoodEntries() {
     onSuccess: () => {
       queryClient.invalidateQueries(["foods"]);
       queryClient.invalidateQueries(["check_daily_calorie"]);
+      queryClient.invalidateQueries(["check_monthly_budget"]);
     },
     onError(error: AxiosError<IErrorResponse>) {
       toast({
@@ -92,6 +104,8 @@ export function FoodEntries() {
             startDateId="start"
             endDateId="end"
             endDate={endDate}
+            isDayBlocked={() => false}
+            isOutsideRange={(day) => day.isAfter(moment())}
             onDatesChange={({ startDate, endDate }) => {
               setStartDate(moment(startDate).startOf("day").utc());
               setEndDate(moment(endDate).endOf("day").utc());
@@ -105,14 +119,7 @@ export function FoodEntries() {
       <Divider />
 
       <List my="5" spacing={2}>
-        {isLoading ? (
-          <Center py="10">
-            <CircularProgress thickness="4px" isIndeterminate />
-          </Center>
-        ) : (
-          data?.data.map((item) => <FoodEntry key={item.id} data={item} />)
-        )}
-        <Box position="relative">
+        <Box position="relative" zIndex={1} minHeight="67.2px">
           {!isAddOpen && (
             <Button
               width="full"
@@ -136,6 +143,13 @@ export function FoodEntries() {
             />
           </ScaleFade>
         </Box>
+        {isLoading ? (
+          <Center py="10">
+            <CircularProgress thickness="4px" isIndeterminate />
+          </Center>
+        ) : (
+          data?.data.map((item) => <FoodEntry key={item.id} data={item} />)
+        )}
       </List>
     </>
   );

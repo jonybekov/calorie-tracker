@@ -10,8 +10,8 @@ async function getAllFoods({ userId, startDate, endDate, size, page }) {
 
   const foods = await foodsRepository.findAllFoods({
     userId,
-    startDate: !isNone(startDate) ? startDate : DEFAULT_START_DATE,
-    endDate: !isNone(endDate) ? endDate : DEFAULT_END_DATE,
+    startDate: !isNone(startDate) ? startDate : null,
+    endDate: !isNone(endDate) ? endDate : null,
     size: !isNone(size) ? size : DEFAULT_SIZE,
     page: page ?? DEFAULT_PAGE,
   });

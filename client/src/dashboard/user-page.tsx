@@ -22,6 +22,7 @@ import {
   queryClient,
   updateUserFood,
   deleteUserFood,
+  createRandomFoods,
 } from "../shared/api";
 import { FoodsTable } from "./foods-table";
 import { ReactComponent as PlusIcon } from "../shared/assets/plus.svg";
@@ -55,6 +56,7 @@ export function UserPage() {
   const onSuccess = (message: string) => () => {
     queryClient.invalidateQueries(["user-foods"]);
     onClose();
+    setEditingRow(null);
     toast({
       title: message,
       status: "success",
@@ -80,6 +82,10 @@ export function UserPage() {
 
   const deleteMutation = useMutation(deleteUserFood, {
     onSuccess: onSuccess("Entry successfully deleted"),
+  });
+
+  const randomMutation = useMutation(createRandomFoods, {
+    onSuccess: onSuccess("10 random food entries added successfully"),
   });
 
   const handleSubmit = (formValues: IFoodForm) => {
@@ -114,6 +120,15 @@ export function UserPage() {
         >
           Add Food Entry
         </Button>
+        <Button
+          leftIcon={<PlusIcon />}
+          isLoading={randomMutation.isLoading}
+          onClick={() => {
+            randomMutation.mutate(userId);
+          }}
+        >
+          Add 10 Foods
+        </Button>
       </HStack>
 
       <FoodsTable
@@ -142,6 +157,11 @@ export function UserPage() {
           <DrawerCloseButton />
           <DrawerBody>
             <FoodEntryForm
+              isLoading={
+                formMode === "edit"
+                  ? updateMutation.isLoading
+                  : createMutation.isLoading
+              }
               initialValues={editingRowForm!}
               mode={formMode}
               consumer="admin"

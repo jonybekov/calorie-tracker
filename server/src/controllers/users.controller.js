@@ -35,19 +35,33 @@ async function updateAuthUser(req, res, next) {
   }
 }
 
-async function checkCalorieLimit(req, res) {
-  const { startDate, endDate } = req.query;
-  const result = await userService.checkCalorieLimit({
-    userId: req.user.id,
-    startDate,
-    endDate,
-  });
+async function checkCalorieLimit(req, res, next) {
+  try {
+    const { startDate, endDate } = req.query;
+    const result = await userService.checkCalorieLimit({
+      userId: req.user.id,
+      startDate,
+      endDate,
+    });
 
-  res.json(result);
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function checkBudgetLimit(req, res, next) {
+  try {
+    const result = await userService.checkMontlyLimit(req.user.id);
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
 }
 
 module.exports = {
   getAuthUser,
   updateAuthUser,
   checkCalorieLimit,
+  checkBudgetLimit,
 };

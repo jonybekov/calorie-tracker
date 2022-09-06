@@ -25,3 +25,11 @@ export type DailyCaloriesResult = {
   daily_calories: string;
   is_exceeded: boolean;
 };
+
+export type MonthlyExpensesResult = {
+  id: ID;
+  first_name: string;
+  consumed_at: string;
+  total_price: string;
+  is_exceeded: boolean;
+};

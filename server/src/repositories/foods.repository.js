@@ -1,13 +1,19 @@
 const db = require("../services/db.service");
 
-const QUERY_USER_FOODS = `
+const QUERY_USER_FOODS_BY_DATE_RANGE = `
   SELECT * FROM foods
   WHERE user_id = $1
   AND consumed_at BETWEEN $2 AND $3
   ORDER BY created_at DESC
-  LIMIT $4
-  OFFSET (($5 - 1) * $4);
-`;
+  `;
+
+const QUERY_ALL_USER_FOODS = `
+  SELECT * FROM foods
+  WHERE user_id = $1
+  ORDER BY created_at DESC
+  `;
+// LIMIT $4
+// OFFSET (($5 - 1) * $4);
 
 const QUERY_FOOD_BY_ID = `
   SELECT * FROM foods
@@ -36,23 +42,20 @@ const INSERT_FOOD = `
   RETURNING *;
 `;
 
-const QUERY_CALORIES_SUM_BY_DATE = `
-  SELECT SUM(calorie_value) FROM foods
-  WHERE user_id = $1
-`;
-
 const QUERY_DAILY_CALORIES_BY_RANGE = `
   SELECT u.id, u.first_name, dtp.consumed_at, dtp.daily_calories, dtp.daily_calories > u.daily_calorie_limit AS is_exceeded
   FROM users AS u
-  INNER JOIN daily_total_price dtp on u.id = dtp.user_id
+  INNER JOIN daily_total_calories dtp on u.id = dtp.user_id
   WHERE u.id = $1 AND consumed_at BETWEEN $2 and $3
 `;
 
-const QUERY_USER_SPENDINGS_FOR_ONE_MONTH = `
-  SELECT SUM(price) FROM foods
-  WHERE consumed_at > $1 - INTERVAL '1 month'
-  AND consumed_at <= $1
-`;
+const QUERY_MONTHLY_BUDGET_BY_RANGE = `
+  SELECT u.id, u.first_name, mtp.consumed_at, mtp.total_price, mtp.total_price > u.monthly_budget_limit AS is_exceeded
+  FROM users AS u
+  INNER JOIN monthly_total_price mtp on u.id = mtp.user_id
+  WHERE u.id = $1
+  ORDER BY consumed_at DESC
+  `;
 
 const DELETE_FOOD = `
   DELETE FROM foods
@@ -61,13 +64,13 @@ const DELETE_FOOD = `
 `;
 
 async function findAllFoods({ userId, startDate, endDate, size, page }) {
-  const { rows, rowCount } = await db.queryParams(QUERY_USER_FOODS, [
-    userId,
-    startDate,
-    endDate,
-    size,
-    page,
-  ]);
+  const query =
+    startDate && endDate
+      ? QUERY_USER_FOODS_BY_DATE_RANGE
+      : QUERY_ALL_USER_FOODS;
+  const params = startDate && endDate ? [userId, startDate, endDate] : [userId];
+  const { rows, rowCount } = await db.queryParams(query, params);
+
   return {
     data: rows,
     count: rowCount,
@@ -124,11 +127,8 @@ async function getUserTotalCaloriesByDate({ userId, startDate, endDate }) {
   return result.rows;
 }
 
-async function getUserTotalSpendingsForOneMonth(userId, endDate) {
-  const result = await db.queryParams(QUERY_USER_SPENDINGS_FOR_ONE_MONTH, [
-    userId,
-    endDate,
-  ]);
+async function getUserMonthySpendings(userId) {
+  const result = await db.queryParams(QUERY_MONTHLY_BUDGET_BY_RANGE, [userId]);
 
   return result.rows[0];
 }
@@ -141,5 +141,5 @@ module.exports = {
   updateFood,
   deleteFood,
   getUserTotalCaloriesByDate,
-  getUserTotalSpendingsForOneMonth,
+  getUserMonthySpendings,
 };

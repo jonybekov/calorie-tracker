@@ -48,3 +48,11 @@ export const updateUserFood = async ({
 export const deleteUserFood = async ({ userId, foodId }: IFoodFormParams) => {
   return (await request.delete(`/users/${userId}/foods/${foodId}`)).data;
 };
+
+export const createRandomUsers = async () => {
+  return request.post(`/random/users`);
+};
+
+export const createRandomFoods = async (userId: string) => {
+  return request.post(`/random/foods?userId=${userId}`);
+};

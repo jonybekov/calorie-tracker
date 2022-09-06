@@ -19,7 +19,6 @@ export const GlobalContextProvider = ({
 }: React.PropsWithChildren) => {
   const { isLoading, isError, data } = useQuery(["me"], getMe, {
     refetchOnWindowFocus: false,
-    retry: false,
   });
 
   const value = {

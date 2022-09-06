@@ -15,4 +15,7 @@ router.put("/users/:id/foods/:foodId", adminController.updateUserFood);
 router.delete("/users/:id/foods/:foodId", adminController.deleteUserFood);
 router.get("/statistics", adminController.getStatistics);
 
+router.post("/random/users", adminController.createRandomUsers);
+router.post("/random/foods", adminController.createRandomFoodsForUser);
+
 module.exports = router;

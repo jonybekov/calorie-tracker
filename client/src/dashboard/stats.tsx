@@ -1,8 +1,10 @@
 import { Box, chakra, Flex, Heading, HStack, Text } from "@chakra-ui/react";
 import { IStatistics } from "../shared/types";
 import { ReactComponent as Increase } from "../shared/assets/increase.svg";
+import { ReactComponent as Decrease } from "../shared/assets/decrease.svg";
 
 const IncreaseIcon = chakra(Increase);
+const DecreaseIcon = chakra(Decrease);
 
 interface IProps {
   data?: IStatistics;
@@ -10,7 +12,8 @@ interface IProps {
 
 export function Stats({ data }: IProps) {
   const { last_week = 0, before_last_week = 0 } = data || {};
-  const change = Math.floor(last_week - before_last_week / last_week) * 100;
+  const change =
+    Math.floor(((last_week - before_last_week) / last_week) * 100 * 10) / 10;
   const hasIncreased = last_week > before_last_week ? true : false;
   const color = hasIncreased ? "green.500" : "red.500";
 
@@ -48,7 +51,6 @@ export function Stats({ data }: IProps) {
         </HStack>
         <Text fontSize="sm" color="gray.500">
           <Text as="span" color={color} fontWeight="semibold">
-            {!hasIncreased && "-"}
             {change}%
           </Text>{" "}
           {hasIncreased ? "increase" : "decrease"} compared to last week
@@ -56,7 +58,11 @@ export function Stats({ data }: IProps) {
       </Box>
       <Box>
         <Box width="12" bgColor="gray.100" borderRadius="lg" p="2.5">
-          <IncreaseIcon color={color} />
+          {hasIncreased ? (
+            <IncreaseIcon color={color} />
+          ) : (
+            <DecreaseIcon color={color} />
+          )}
         </Box>
       </Box>
     </Flex>

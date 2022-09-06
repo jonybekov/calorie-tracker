@@ -31,6 +31,7 @@ interface IProps {
 
 export const UserSettingsForm = ({ onClose }: IProps) => {
   const { user } = useGlobalContext();
+
   const toast = useToast();
   const {
     register,

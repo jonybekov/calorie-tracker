@@ -31,18 +31,9 @@ async function checkCalorieLimit({ userId, startDate, endDate }) {
   return result;
 }
 
-async function checkBudgetLimit(userId, endDate) {
-  const totalCalories = await foodsRepository.getUserTotalSpendingsForOneMonth(
-    userId,
-    endDate
-  );
-  const user = await usersService.getUserById(userId);
-
-  if (totalCalories > user.daily_calorie_limit) {
-    return { is_exceeded: true };
-  }
-
-  return { is_exceeded: false };
+async function checkBudgetLimit(userId) {
+  const result = await foodsRepository.getUserMonthySpendings(userId);
+  return result;
 }
 
 async function checkAuth(login, password) {
@@ -88,6 +79,7 @@ module.exports = {
   getUserByToken,
   updateUserByToken,
   checkCalorieLimit,
+  checkBudgetLimit,
   checkAuth,
   registerUser,
 };
