@@ -8,10 +8,12 @@ import {
   Flex,
   Heading,
   List,
+  ListItem,
   ScaleFade,
   Spacer,
   useBoolean,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
@@ -21,12 +23,12 @@ import {
   getFoods,
   queryClient,
 } from "../shared/api";
-import { IFoodForm } from "../shared/types/food";
+import { IFood, IFoodForm } from "../shared/types/food";
 import { FoodEntry } from "./food-entry";
 import { FoodEntryForm } from "../shared/components/food-entry-form";
 
 import { DateRangePicker, FocusedInputShape } from "react-dates";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Moment } from "moment";
 import { AxiosError } from "axios";
 import { ErrorCode, IErrorResponse } from "../shared/types";
@@ -34,6 +36,7 @@ import moment from "moment";
 import { DailyCalorieAlert } from "./daily-calorie-alert";
 import { MonthlyBudgetAlert } from "./monthy-budget-alert";
 import { useGlobalContext } from "../app/contexts";
+import { groupCalendarFormats } from "../shared/helpers";
 
 export function FoodEntries() {
   const [isAddOpen, setIsAddOpen] = useBoolean();
@@ -102,6 +105,32 @@ export function FoodEntries() {
 
   const handleAdd = (newFood: IFoodForm) => mutation.mutate(newFood);
 
+  const foodEntriesByDateGroup = useMemo(() => {
+    if (!data) return [];
+
+    const groups = data.data.reduce<Record<string, IFood[]>>((groups, item) => {
+      const date = moment(item.consumed_at).format("YYYY-MMM-DD");
+
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+
+      groups[date].push(item);
+      return groups;
+    }, {});
+
+    const groupArrays = Object.keys(groups).map((date) => {
+      return {
+        date,
+        entries: groups[date],
+      };
+    });
+
+    return groupArrays;
+  }, [data?.data]);
+
+  console.log(foodEntriesByDateGroup);
+
   return (
     <>
       <Flex align="center" mb="2">
@@ -136,8 +165,8 @@ export function FoodEntries() {
       />
       <Divider />
 
-      <List my="5" spacing={2}>
-        <Box position="relative" zIndex={1} minHeight="67.2px">
+      <List my="5" spacing={4}>
+        <Box position="relative" zIndex={4} minHeight="67.2px">
           {!isAddOpen && (
             <Button
               width="full"
@@ -166,7 +195,42 @@ export function FoodEntries() {
             <CircularProgress thickness="4px" isIndeterminate />
           </Center>
         ) : (
-          data?.data.map((item) => <FoodEntry key={item.id} data={item} />)
+          foodEntriesByDateGroup
+            .sort((a, b) => moment(b.date).unix() - moment(a.date).unix())
+            .map((group) => {
+              const formattedDate = moment(group.date).calendar(
+                null,
+                groupCalendarFormats
+              );
+
+              return (
+                <ListItem position="relative">
+                  <Flex
+                    position="sticky"
+                    zIndex="2"
+                    pb="3"
+                    top="4px"
+                    justifyContent="center"
+                  >
+                    <Box
+                      color="white"
+                      borderRadius="xl"
+                      px="2"
+                      fontSize="xs"
+                      bgColor="gray.400"
+                      textAlign="center"
+                    >
+                      {formattedDate}
+                    </Box>
+                  </Flex>
+                  <List spacing={2}>
+                    {group.entries.map((item) => (
+                      <FoodEntry key={item.id} data={item} />
+                    ))}
+                  </List>
+                </ListItem>
+              );
+            })
         )}
       </List>
     </>

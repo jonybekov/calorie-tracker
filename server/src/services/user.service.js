@@ -20,14 +20,15 @@ async function updateUserByToken(token, data) {
 }
 
 async function checkCalorieLimit({ userId, startDate, endDate }) {
-  const DEFAULT_START_DATE = dayjs().startOf("D").toISOString();
-  const DEFAULT_END_DATE = dayjs().endOf("D").toISOString();
+  const DEFAULT_START_DATE = dayjs().startOf("D").format();
+  const DEFAULT_END_DATE = dayjs().format();
 
   const result = await foodsRepository.getUserTotalCaloriesByDate({
     userId,
     startDate: !isNone(startDate) ? startDate : DEFAULT_START_DATE,
     endDate: !isNone(endDate) ? endDate : DEFAULT_END_DATE,
   });
+
   return result;
 }
 

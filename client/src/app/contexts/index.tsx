@@ -29,15 +29,9 @@ export const GlobalContextProvider = ({
       });
   }, []);
 
-  const value = React.useMemo(
-    () => ({
-      user,
-      isLoading,
-    }),
-    [user, isLoading]
-  );
-
   return (
-    <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>
+    <GlobalContext.Provider value={{ user, isLoading }}>
+      {children}
+    </GlobalContext.Provider>
   );
 };

@@ -25,9 +25,9 @@ export function MonthlyBudgetAlert({ budgetLimit, monthlyExpenses }: IProps) {
   if (!isWarningVisible) return null;
 
   return (
-    <Alert borderRadius="lg" status="warning" mb="2">
-      <AlertIcon />
-      You reached your monthly budget limit of{" "}
+    <Alert borderRadius="lg" status="warning" mb="2" display="block" pl="12">
+      <AlertIcon height="full" position="absolute" top="0" left="4" />
+      You reached your monthly budget limit of
       <Text as="span" mx="1" fontWeight="bold">
         ${budgetLimit}
       </Text>

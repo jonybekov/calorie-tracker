@@ -13,7 +13,7 @@ interface IProps {
 export function DailyCalorieAlert({ calorieLimit, totalCalories }: IProps) {
   const isWarningVisible = totalCalories?.some((item) => item.is_exceeded);
 
-  const calorieLimitExceededDays = useMemo(() => {
+  const exceededDays = useMemo(() => {
     if (!totalCalories?.length) return;
 
     if (totalCalories.length === 1 && isToday(totalCalories[0].consumed_at)) {
@@ -33,15 +33,15 @@ export function DailyCalorieAlert({ calorieLimit, totalCalories }: IProps) {
   if (!isWarningVisible) return null;
 
   return (
-    <Alert borderRadius="lg" status="warning" mb="2">
-      <AlertIcon />
-      You reached your daily calorie limit of{" "}
+    <Alert borderRadius="lg" status="warning" mb="2" display="block" pl="12">
+      <AlertIcon height="full" position="absolute" top="0" left="4" />
+      You reached your daily calorie limit of
       <Text as="span" mx="1" fontWeight="bold">
-        {calorieLimit}
+        {calorieLimit} kcal
       </Text>
-      kcal for
+      for
       <Text as="span" mx="1" fontWeight="bold">
-        {calorieLimitExceededDays}
+        {exceededDays}
       </Text>
     </Alert>
   );

@@ -14,6 +14,7 @@ import { ID } from "../shared/types";
 import { IFood, IFoodForm } from "../shared/types/food";
 import { FoodEntryForm } from "../shared/components/food-entry-form";
 import { convertFoodEntryToForm } from "../shared/helpers";
+import moment from "moment";
 
 interface IProps {
   data: IFood;
@@ -75,10 +76,13 @@ export function FoodEntry({ data }: IProps) {
         <Text fontSize="lg" fontWeight="medium">
           {data.name}
         </Text>
-        <Text fontSize="sm" color="gray.500" marginLeft="2" fontWeight="medium">
-          {data.calorie_value} kcal, ${data.price}
+        <Text fontSize="sm" color="gray.500" ml="2" fontWeight="medium">
+          {data.calorie_value} kcal, ${data.price},{" "}
         </Text>
         <Spacer />
+        <Text fontSize="sm" color="gray.500" mr="3" fontWeight="medium">
+          {moment(data.consumed_at).format("HH:mm")}
+        </Text>
 
         <IconButton
           aria-label="edit"
