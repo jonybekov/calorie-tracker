@@ -130,7 +130,7 @@ async function getUserTotalCaloriesByDate({ userId, startDate, endDate }) {
 async function getUserMonthySpendings(userId) {
   const result = await db.queryParams(QUERY_MONTHLY_BUDGET_BY_RANGE, [userId]);
 
-  return result.rows[0];
+  return result.rows;
 }
 
 module.exports = {

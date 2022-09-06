@@ -15,7 +15,7 @@ import {
   Spacer,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { useGlobalContext } from "../app/contexts/global.context";
+import { useGlobalContext } from "../app/contexts";
 import { isAuthenticated } from "../shared/helpers";
 import { UserSettingsForm } from "./user-settings-form";
 

@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Heading } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { useGlobalContext } from "../app/contexts/global.context";
+import { useGlobalContext } from "../app/contexts";
 import { getStatistics } from "../shared/api/admin";
 import { Stats } from "./stats";
 

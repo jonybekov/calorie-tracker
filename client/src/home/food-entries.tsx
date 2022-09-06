@@ -32,6 +32,8 @@ import { AxiosError } from "axios";
 import { ErrorCode, IErrorResponse } from "../shared/types";
 import moment from "moment";
 import { DailyCalorieAlert } from "./daily-calorie-alert";
+import { MonthlyBudgetAlert } from "./monthy-budget-alert";
+import { useGlobalContext } from "../app/contexts";
 
 export function FoodEntries() {
   const [isAddOpen, setIsAddOpen] = useBoolean();
@@ -41,6 +43,7 @@ export function FoodEntries() {
   const [focusedInput, setFocusedInput] = useState<FocusedInputShape | null>(
     null
   );
+  const { user } = useGlobalContext();
 
   const retry = (_: unknown, error: AxiosError<IErrorResponse>) => {
     if (error.response?.status === ErrorCode.Unauthorized) {
@@ -50,7 +53,13 @@ export function FoodEntries() {
   };
 
   const { isLoading, data } = useQuery(
-    ["foods", { startDate, endDate }],
+    [
+      "foods",
+      {
+        startDate: moment(startDate).startOf("day").utc(),
+        endDate: moment(endDate).endOf("day").utc(),
+      },
+    ],
     getFoods,
     {
       retry,
@@ -58,7 +67,13 @@ export function FoodEntries() {
     }
   );
   const { data: totalCalories } = useQuery(
-    ["check_daily_calorie", { startDate, endDate }],
+    [
+      "check_daily_calorie",
+      {
+        startDate: moment(startDate).startOf("day").utc(),
+        endDate: moment(endDate).endOf("day").utc(),
+      },
+    ],
     checkCalorieLimit,
     {
       refetchOnWindowFocus: false,
@@ -70,10 +85,6 @@ export function FoodEntries() {
     checkBudgetLimit,
     { refetchOnWindowFocus: false }
   );
-
-  console.log(monthlyExpenses);
-
-  const isWarningVisible = totalCalories?.some((item) => item.is_exceeded);
 
   const mutation = useMutation(createFood, {
     onSuccess: () => {
@@ -107,15 +118,22 @@ export function FoodEntries() {
             isDayBlocked={() => false}
             isOutsideRange={(day) => day.isAfter(moment())}
             onDatesChange={({ startDate, endDate }) => {
-              setStartDate(moment(startDate).startOf("day").utc());
-              setEndDate(moment(endDate).endOf("day").utc());
+              setStartDate(startDate);
+              setEndDate(endDate);
             }}
             focusedInput={focusedInput}
             onFocusChange={setFocusedInput}
           />
         </Box>
       </Flex>
-      {isWarningVisible && <DailyCalorieAlert totalCalories={totalCalories} />}
+      <DailyCalorieAlert
+        calorieLimit={user?.daily_calorie_limit}
+        totalCalories={totalCalories}
+      />
+      <MonthlyBudgetAlert
+        budgetLimit={user?.monthly_budget_limit}
+        monthlyExpenses={monthlyExpenses}
+      />
       <Divider />
 
       <List my="5" spacing={2}>

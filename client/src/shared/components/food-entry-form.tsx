@@ -11,7 +11,7 @@ import {
   useOutsideClick,
 } from "@chakra-ui/react";
 import { useEffect, useRef } from "react";
-import { useGlobalContext } from "../../app/contexts/global.context";
+import { useGlobalContext } from "../../app/contexts";
 import { formatPrice } from "../helpers";
 import { UseFoodEntryForm, useFoodEntryForm } from "../hooks";
 import { MobileSpinner } from "./mobile-spinner";

@@ -52,7 +52,7 @@ async function checkCalorieLimit(req, res, next) {
 
 async function checkBudgetLimit(req, res, next) {
   try {
-    const result = await userService.checkMontlyLimit(req.user.id);
+    const result = await userService.checkBudgetLimit(req.user.id);
     res.json(result);
   } catch (err) {
     next(err);

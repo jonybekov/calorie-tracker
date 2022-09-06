@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState, createContext, useContext } from "react";
 import { getMe } from "../../shared/api";
 import { IUser } from "../../shared/types";

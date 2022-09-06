@@ -1,16 +1,17 @@
 import { Alert, AlertIcon, Text, Tooltip } from "@chakra-ui/react";
 import { useMemo } from "react";
-import { useGlobalContext } from "../app/contexts/global.context";
+import { useGlobalContext } from "../app/contexts";
 import { isToday } from "../shared/helpers";
 import { DailyCaloriesResult } from "../shared/types";
 import moment from "moment";
 
 interface IProps {
+  calorieLimit?: number;
   totalCalories?: DailyCaloriesResult[];
 }
 
-export function DailyCalorieAlert({ totalCalories }: IProps) {
-  const { user } = useGlobalContext();
+export function DailyCalorieAlert({ calorieLimit, totalCalories }: IProps) {
+  const isWarningVisible = totalCalories?.some((item) => item.is_exceeded);
 
   const calorieLimitExceededDays = useMemo(() => {
     if (!totalCalories?.length) return;
@@ -25,16 +26,18 @@ export function DailyCalorieAlert({ totalCalories }: IProps) {
 
     return totalCalories
       .filter((item) => item.is_exceeded)
-      .map((item) => moment(item.consumed_at).format("MMMM D, YY"))
+      .map((item) => moment(item.consumed_at).format("MMMM D"))
       .join(", ");
   }, [totalCalories]);
+
+  if (!isWarningVisible) return null;
 
   return (
     <Alert borderRadius="lg" status="warning" mb="2">
       <AlertIcon />
       You reached your daily calorie limit of{" "}
       <Text as="span" mx="1" fontWeight="bold">
-        {user?.daily_calorie_limit}
+        {calorieLimit}
       </Text>
       kcal for
       <Text as="span" mx="1" fontWeight="bold">

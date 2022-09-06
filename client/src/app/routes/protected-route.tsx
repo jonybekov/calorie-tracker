@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { isAuthenticated } from "../../shared/helpers";
 import { Role } from "../../shared/types";
-import { useGlobalContext } from "../contexts/global.context";
+import { useGlobalContext } from "../contexts";
 
 interface IProtectedRouteProps {
   redirectPath?: string;

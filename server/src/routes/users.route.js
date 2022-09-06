@@ -7,8 +7,8 @@ router.get("/me", usersController.getAuthUser);
 
 router.post("/me", usersController.updateAuthUser);
 
-router.get("/me/check/daily-calories", usersController.checkCalorieLimit);
+router.get("/me/check/monthly-budget", usersController.checkBudgetLimit);
 
-router.post("/me/check/monthly-budget", usersController.checkBudgetLimit);
+router.get("/me/check/daily-calories", usersController.checkCalorieLimit);
 
 module.exports = router;
