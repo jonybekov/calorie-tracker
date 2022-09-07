@@ -11,6 +11,7 @@ import {
   ListItem,
   ScaleFade,
   Spacer,
+  Text,
   useBoolean,
   useToast,
   VStack,
@@ -177,7 +178,7 @@ export function FoodEntries() {
             endDateId="end"
             endDate={endDate}
             isDayBlocked={() => false}
-            isOutsideRange={(day) => day.isAfter(moment())}
+            isOutsideRange={() => false}
             onDatesChange={({ startDate, endDate }) => {
               setStartDate(startDate);
               setEndDate(endDate);
@@ -225,6 +226,12 @@ export function FoodEntries() {
         {isLoading ? (
           <Center py="10">
             <CircularProgress thickness="4px" isIndeterminate />
+          </Center>
+        ) : !foodsGroup.length ? (
+          <Center py="5">
+            <Text fontSize="xl" color="gray.500" fontWeight="medium">
+              Nothing found. Try to add a new item
+            </Text>
           </Center>
         ) : (
           foodsGroup

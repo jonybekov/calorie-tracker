@@ -28,6 +28,7 @@ export function FoodEntry({ data }: IProps) {
     onSuccess: () => {
       queryClient.invalidateQueries(["foods"]);
       queryClient.invalidateQueries(["check_daily_calorie"]);
+      queryClient.invalidateQueries(["check_monthly_budget"]);
     },
     onError() {
       toast({
@@ -41,6 +42,7 @@ export function FoodEntry({ data }: IProps) {
     onSuccess: () => {
       queryClient.invalidateQueries(["foods"]);
       queryClient.invalidateQueries(["check_daily_calorie"]);
+      queryClient.invalidateQueries(["check_monthly_budget"]);
     },
     onError() {
       toast({

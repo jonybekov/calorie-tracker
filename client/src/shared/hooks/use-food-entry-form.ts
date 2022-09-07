@@ -34,11 +34,14 @@ export const useFoodEntryForm = ({
 
   const validate = async () => {
     return new Promise((resolve, reject) => {
-      if (!formValues.name || !formValues.caloriesValue) {
+      if (!formValues.name || !formValues.caloriesValue || !formValues.price) {
         setErrors({
           ...(!formValues.name && { name: "Food name must be entered" }),
           ...(!formValues.caloriesValue && {
-            calories: "Calories name must be entered",
+            calorie_value: "Calories name must be entered",
+          }),
+          ...(!formValues.price && {
+            price: "Price must be greater than zero",
           }),
         });
         reject(false);
@@ -52,9 +55,9 @@ export const useFoodEntryForm = ({
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
-    try {
-      await validate();
+    await validate();
 
+    try {
       reset();
       onSubmit(formValues as IFoodForm);
     } catch (err) {
@@ -69,5 +72,6 @@ export const useFoodEntryForm = ({
     handleSubmit,
     formValues,
     setFormValues,
+    errors,
   };
 };

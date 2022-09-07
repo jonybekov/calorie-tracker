@@ -38,6 +38,7 @@ export const UserSettingsForm = ({ user, onClose }: IProps) => {
     setValue,
     formState: { errors, isDirty },
   } = useForm<IUser>({
+    mode: "onChange",
     defaultValues: {
       first_name: user?.first_name,
       last_name: user?.last_name,
@@ -51,6 +52,7 @@ export const UserSettingsForm = ({ user, onClose }: IProps) => {
     onSuccess() {
       queryClient.invalidateQueries(["me"]);
       queryClient.invalidateQueries(["check_daily_calorie"]);
+      queryClient.invalidateQueries(["check_monthly_budget"]);
 
       onClose?.();
       toast({
@@ -108,9 +110,9 @@ export const UserSettingsForm = ({ user, onClose }: IProps) => {
                 {...register("monthly_budget_limit")}
                 min={0}
                 max={Infinity}
-                onChange={(_, valueAsNumber) => {
-                  setValue("monthly_budget_limit", valueAsNumber);
-                }}
+                onChange={(_, valueAsNumber) =>
+                  setValue("monthly_budget_limit", valueAsNumber)
+                }
               >
                 <NumberInputField name="monthly_budget_limit" />
                 <NumberInputStepper>

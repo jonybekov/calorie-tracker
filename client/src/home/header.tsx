@@ -31,7 +31,6 @@ export const Header = () => {
 
   const logOut = () => {
     localStorage.removeItem("access_token");
-    queryClient.invalidateQueries(["me"]);
     location.reload();
   };
 
@@ -100,13 +99,8 @@ export const Header = () => {
       </Flex>
       {!isAuthenticated() && (
         <Alert borderRadius="lg" fontWeight="medium" mb="4">
-          <Text>Please sign in to save changes</Text>
+          <Text>Please sign in to continue</Text>
           <Spacer />
-          <CloseButton
-            alignSelf="flex-start"
-            position="relative"
-            onClick={onClose}
-          />
         </Alert>
       )}
     </VStack>

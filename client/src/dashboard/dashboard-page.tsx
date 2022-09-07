@@ -40,7 +40,7 @@ export function DashboardPage() {
             <Legend />
             <Bar
               dataKey="average_calories"
-              name="Average calories"
+              name="Average calories (kcal) "
               fill="#82ca9d"
             />
             <Brush

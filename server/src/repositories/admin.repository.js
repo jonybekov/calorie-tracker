@@ -26,6 +26,7 @@ const QUERY_AVERAGE_CALORIES_PER_USER_FOR_LAST_WEEK = `
     INNER JOIN users u on u.id = simple_users_foods.user_id
     WHERE consumed_at BETWEEN date_trunc('day', NOW()) - INTERVAL '7 day' AND date_trunc('day', NOW()) + INTERVAL '1 day' - INTERVAL '1 second'
     GROUP BY user_id, first_name, last_name 
+    ORDER BY first_name ASC
 `;
 
 async function findAllUsers() {

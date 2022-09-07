@@ -4,6 +4,7 @@ import {
   ChakraProps,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Input,
   NumberInput,
@@ -30,7 +31,8 @@ export function FoodEntryForm({
 }: IProps) {
   const { user } = useGlobalContext();
   const ref = useRef<HTMLDivElement | null>(null);
-  const { handleSubmit, formValues, setFormValues } = useFoodEntryForm(props);
+  const { handleSubmit, formValues, setFormValues, errors } =
+    useFoodEntryForm(props);
 
   const wrapperStyles: ChakraProps = {
     position: "absolute",
@@ -63,19 +65,22 @@ export function FoodEntryForm({
         borderColor="gray.200"
       >
         <Box padding={consumer !== "admin" ? "4" : "none"}>
-          <Input
-            autoFocus
-            fontSize="2xl"
-            fontWeight="semibold"
-            value={formValues.name}
-            onChange={({ target }) =>
-              setFormValues((val) => ({ ...val, name: target.value }))
-            }
-            variant="unstyled"
-            mb="4"
-            placeholder="Food name here..."
-          />
+          <FormControl isInvalid={!!errors?.name} mb="4">
+            <Input
+              autoFocus
+              fontSize="2xl"
+              fontWeight="semibold"
+              value={formValues.name}
+              onChange={({ target }) =>
+                setFormValues((val) => ({ ...val, name: target.value }))
+              }
+              variant="unstyled"
+              placeholder="Food name here..."
+            />
+            <FormErrorMessage>{errors?.name}</FormErrorMessage>
+          </FormControl>
           <MobileSpinner
+            isInvalid={!!errors?.calorie_value}
             max={user?.daily_calorie_limit}
             value={formValues.caloriesValue}
             onChange={(_, value) => {
@@ -85,7 +90,7 @@ export function FoodEntryForm({
               }));
             }}
           />
-          <FormControl mt="4">
+          <FormControl mt="4" isInvalid={!!errors?.price}>
             <FormLabel>Price</FormLabel>
             <NumberInput
               format={formatPrice}
@@ -99,6 +104,7 @@ export function FoodEntryForm({
             >
               <NumberInputField />
             </NumberInput>
+            <FormErrorMessage>Price must be greater than zero</FormErrorMessage>
           </FormControl>
         </Box>
 
