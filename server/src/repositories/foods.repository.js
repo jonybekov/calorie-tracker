@@ -46,7 +46,7 @@ const QUERY_DAILY_CALORIES_BY_RANGE = `
   SELECT u.id, u.first_name, dtp.consumed_at, dtp.daily_calories, dtp.daily_calories > u.daily_calorie_limit AS is_exceeded
   FROM users AS u
   INNER JOIN daily_total_calories dtp on u.id = dtp.user_id
-  WHERE u.id = $1 AND consumed_at BETWEEN $2::timestamptz and $3::timestamptz
+  WHERE u.id = $1 AND consumed_at BETWEEN date_trunc('day', $2::timestamptz) and $3::timestamptz
 `;
 
 const QUERY_MONTHLY_BUDGET_BY_RANGE = `
