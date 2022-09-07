@@ -14,7 +14,6 @@ import {
   Text,
   useBoolean,
   useToast,
-  VStack,
 } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
@@ -166,6 +165,14 @@ export function FoodEntries() {
 
   return (
     <>
+      <DailyCalorieAlert
+        calorieLimit={user?.daily_calorie_limit}
+        totalCalories={totalCalories}
+      />
+      <MonthlyBudgetAlert
+        budgetLimit={user?.monthly_budget_limit}
+        monthlyExpenses={monthlyExpenses}
+      />
       <Flex align="center" mb="2">
         <Heading fontSize="2xl" color="gray.700">
           Foods
@@ -188,14 +195,7 @@ export function FoodEntries() {
           />
         </Box>
       </Flex>
-      <DailyCalorieAlert
-        calorieLimit={user?.daily_calorie_limit}
-        totalCalories={totalCalories}
-      />
-      <MonthlyBudgetAlert
-        budgetLimit={user?.monthly_budget_limit}
-        monthlyExpenses={monthlyExpenses}
-      />
+
       <Divider />
 
       <List my="5" spacing={4}>
