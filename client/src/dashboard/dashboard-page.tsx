@@ -43,12 +43,7 @@ export function DashboardPage() {
               name="Average calories (kcal) "
               fill="#82ca9d"
             />
-            <Brush
-              dataKey="first_name"
-              height={30}
-              stroke="#8884d8"
-              endIndex={20}
-            />
+            <Brush dataKey="first_name" height={30} stroke="#8884d8" />
           </BarChart>
         </ResponsiveContainer>
       </Box>
